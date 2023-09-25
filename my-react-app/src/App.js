@@ -5,7 +5,8 @@ import Header from "./Header";
 import CadastroPessoa from "./CadastroPessoa";
 import './App.css'
 import { Route, Routes, BrowserRouter as Router, useNavigate } from 'react-router-dom';
-import ListaDePessoas, { pessoasData } from "./ListaDePessoas";
+import FiltroPessoas from "./FiltroPessoas";
+import ListaDePessoas from "./ListaDePessoas";
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
@@ -49,8 +50,12 @@ function App() {
                         <Route path="/produtos" element={<h1>produtos</h1>} />
                         <Route path="/vendas" element={<h1>vendas</h1>} />
                         <Route
+                            path="/filtro de pessoas"
+                            element={<FiltroPessoas />}
+                        />
+                        <Route
                             path="/lista de pessoas"
-                            element={<ListaDePessoas pessoas={pessoasData} />}
+                            element={<ListaDePessoas />}
                         />
                         <Route path="/lista de vendas" element={<h1>lista de venda</h1>} />
                     </Routes>
