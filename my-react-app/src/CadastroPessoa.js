@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './CadastroPessoa.css'
+import {Link, Route, Router, Routes} from "react-router-dom";
 
 const CadastroPessoa = () => {
     const [codigo, setCodigo] = useState('');
@@ -103,6 +104,11 @@ const CadastroPessoa = () => {
             <div className="button-container">
                 <button className="cancel-button" onClick={handleCancelar}>Cancelar</button>
                 <button className="confirm-button" onClick={handleConfirmar}>Confirmar</button>
+                <Link to="/lista de pessoas">
+                    <button className="list-button"  style={{ fontSize: '15px' }}>
+                        Listar Pessoas
+                    </button>
+                </Link>
             </div>
         </div>
         </p>

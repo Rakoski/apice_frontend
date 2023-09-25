@@ -26,7 +26,7 @@
 
 .cadastro-pessoa-container .button-container button {
     margin-left: 10px;
-    padding: 10px;
+    padding: 20px 20px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
@@ -41,6 +41,11 @@
 /* Style Confirmar button */
 .cadastro-pessoa-container .button-container .confirm-button {
     background-color: green;
+    color: white;
+}
+
+.cadastro-pessoa-container .button-container .list-button {
+    background-color: rgb(128, 128, 128);
     color: white;
 }
 
