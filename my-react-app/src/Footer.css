@@ -1,0 +1,15 @@
+footer {
+    margin-top: 40%;
+    color: black;
+    padding: 10px;
+    text-align: center;
+}
+
+.footer-text {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.footer-date-time {
+    font-size: 14px;
+}
