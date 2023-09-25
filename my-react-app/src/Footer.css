@@ -1,8 +1,12 @@
+/* Footer.css */
 footer {
-    margin-top: 40%;
-    color: black;
+    position: sticky;
+    margin-top: 100px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #ccc;
     padding: 10px;
     text-align: center;
+    z-index: 1; /* Make sure it's above other content */
 }
 
 .footer-text {

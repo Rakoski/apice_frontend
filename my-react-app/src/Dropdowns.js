@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './Dropdowns.css'
 
-function ComboBox({ options, listItemWidth, inputValue, setInputValue }) {
+function Dropdowns({ options, listItemWidth, inputValue, setInputValue }) {
     const [showOptions, setShowOptions] = useState(false);
     const navigate = useNavigate(); // Hook to navigate
 
@@ -35,4 +36,4 @@ function ComboBox({ options, listItemWidth, inputValue, setInputValue }) {
     );
 }
 
-export default ComboBox;
+export default Dropdowns;
