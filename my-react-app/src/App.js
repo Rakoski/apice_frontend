@@ -5,6 +5,7 @@ import Header from "./Header";
 import CadastroPessoa from "./CadastroPessoa";
 import './App.css'
 import { Route, Routes, BrowserRouter as Router, useNavigate } from 'react-router-dom';
+import ListaDePessoas, { pessoasData } from "./ListaDePessoas";
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
@@ -42,13 +43,16 @@ function App() {
                     />
 
                     <Routes>
-                        <Route path="/bairros" element={<h1>Oii o krl</h1>} />
-                        <Route path="/cidades" element={<h1>Oii o cu</h1>} />
+                        <Route path="/bairros" element={<h1>bairros</h1>} />
+                        <Route path="/cidades" element={<h1>cidades</h1>} />
                         <Route path="/pessoas" element={<CadastroPessoa />} />
-                        <Route path="/produtos" element={<h1>Oii 4</h1>} />
+                        <Route path="/produtos" element={<h1>produtos</h1>} />
                         <Route path="/vendas" element={<h1>vendas</h1>} />
-                        <Route path="/lista de pessoas" element={<h1>lista d pessoa</h1>} />
-                        <Route path="/lista de vendas" element={<h1>lista d venda</h1>} />
+                        <Route
+                            path="/lista de pessoas"
+                            element={<ListaDePessoas pessoas={pessoasData} />}
+                        />
+                        <Route path="/lista de vendas" element={<h1>lista de venda</h1>} />
                     </Routes>
                 </div>
             </div>

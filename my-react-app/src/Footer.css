@@ -6,7 +6,6 @@ footer {
     border-top: 1px solid #ccc;
     padding: 10px;
     text-align: center;
-    z-index: 1; /* Make sure it's above other content */
 }
 
 .footer-text {
