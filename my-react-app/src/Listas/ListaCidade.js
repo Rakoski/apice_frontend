@@ -5,14 +5,16 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ListaDePessoas.css';
 import { Link } from 'react-router-dom';
 
-const bairosData = [
+const produtosData = [
     {
-        id_bairro: 1,
-        bairro_nome: 'Jardins',
+        id_cidade: 1,
+        nome_cidade: 'São Paulo',
+        sigla_uf: 'SP'
     },
     {
-        id_bairro: 2,
-        bairro_nome: 'Leblon',
+        id_cidade: 2,
+        nome_cidade: 'Rio de Janeiro',
+        sigla_uf: 'RJ'
     },
 ];
 
@@ -29,7 +31,7 @@ const handleIncluir = () => {
 };
 
 
-const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     return (
         <div className="list-container">
             <div className="table-container">
@@ -37,26 +39,28 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                     <thead>
                     <tr>
                         <th>Código</th>
-                        <th>Nome do Bairro</th>
+                        <th>Nome do Produto</th>
+                        <th>Valor do Produto</th>
                         <th>Ações</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {bairosData.map((bairro) => (
-                        <tr key={bairro.id_bairro}>
-                            <td>{bairro.id_bairro}</td>
-                            <td>{bairro.bairro_nome}</td>
+                    {produtosData.map((produto) => (
+                        <tr key={produto.id_cidade}>
+                            <td>{produto.id_cidade}</td>
+                            <td>{produto.nome_cidade}</td>
+                            <td>{produto.sigla_uf}</td>
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
-                                    onClick={() => onEditar(bairro.id_bairro)}
+                                    onClick={() => onEditar(produto.id_cidade)}
                                     className="edit-button"
                                 >
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
                                 <Button
                                     variant="danger"
-                                    onClick={() => onDeletar(bairro.id_bairro)}
+                                    onClick={() => onDeletar(produto.id_cidade)}
                                     className="delete-button"
                                 >
                                     <FaTrash className="fa-trash" /> Deletar
@@ -67,7 +71,7 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                     </tbody>
                 </Table>
             </div>
-            <Link to="/bairros" className="link-button">
+            <Link to="/cidades" className="link-button">
                 Incluir
             </Link>
         </div>
@@ -75,5 +79,5 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     );
 };
 
-export default ListaDeBairros;
-export {bairosData};
+export default ListaDeProdutos;
+export {produtosData};
