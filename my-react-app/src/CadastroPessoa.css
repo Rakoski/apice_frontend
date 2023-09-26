@@ -47,7 +47,7 @@
 
 .cadastro-pessoa-container .button-container button {
     margin-left: 10px;
-    padding: 25px 25px;
+    padding: 15px 25px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
@@ -72,13 +72,11 @@
 .cadastro-pessoa-container label {
     display: inline-block;
     margin-right: 10px;
-    margin-bottom: 5px;
 }
 
 .cadastro-pessoa-container input[type="text"],
 .cadastro-pessoa-container select {
     flex-grow: 1;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
 }

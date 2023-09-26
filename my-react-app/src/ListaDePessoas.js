@@ -10,13 +10,13 @@ const pessoasData = [
         id: 1,
         nome: 'John Doe',
         cidade: 'City 1',
-        telefone: '123-456-7890',
+        telefone: '(44) 9 9456-7890',
     },
     {
         id: 2,
         nome: 'Jane Smith',
         cidade: 'City 2',
-        telefone: '987-654-3210',
+        telefone: '(44) 9 8765-4321',
     },
 ];
 

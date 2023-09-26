@@ -7,6 +7,7 @@ import './App.css'
 import { Route, Routes, BrowserRouter as Router, useNavigate } from 'react-router-dom';
 import FiltroPessoas from "./FiltroPessoas";
 import ListaDePessoas from "./ListaDePessoas";
+import ListaVenda from "./ListaVenda";
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
@@ -36,7 +37,7 @@ function App() {
                     />
 
                     <Dropdowns
-                        options={['Lista de pessoas', 'Lista de vendas']}
+                        options={['Filtro de pessoas', 'Lista de vendas']}
                         listItemWidth={listItemWidth}
                         defaultValue={inputValue3}
                         inputValue={inputValue3}
@@ -48,7 +49,7 @@ function App() {
                         <Route path="/cidades" element={<h1>cidades</h1>} />
                         <Route path="/pessoas" element={<CadastroPessoa />} />
                         <Route path="/produtos" element={<h1>produtos</h1>} />
-                        <Route path="/vendas" element={<h1>vendas</h1>} />
+                        <Route path="/vendas" element={<h1>Vendas</h1>} />
                         <Route
                             path="/filtro de pessoas"
                             element={<FiltroPessoas />}
@@ -57,7 +58,7 @@ function App() {
                             path="/lista de pessoas"
                             element={<ListaDePessoas />}
                         />
-                        <Route path="/lista de vendas" element={<h1>lista de venda</h1>} />
+                        <Route path="/lista de vendas" element={<ListaVenda />} />
                     </Routes>
                 </div>
             </div>

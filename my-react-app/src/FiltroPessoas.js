@@ -10,14 +10,14 @@ const pessoasData = [
         nome: 'John Doe',
         cidade: 'City 1',
         bairro: 'Bairro 1',
-        telefone: '123-456-7890',
+        telefone: '(44) 9 9456-7890',
     },
     {
         id: 2,
         nome: 'Jane Smith',
         cidade: 'City 2',
         bairro: 'Bairro 2',
-        telefone: '987-654-3210',
+        telefone: '(44) 9 8765-43210',
     },
 ];
 
@@ -37,6 +37,9 @@ const FiltroPessoas = () => {
 
         setFiltrosAtivos(filtroAtivo);
 
+
+        // o filtro apenas funciona de forma que a cidade busque na cidade, o nome busque no nome e etc
+        // eu pretendo, obviamente colocar isso junto do back-end mas já é um começo
         if (filtroAtivo) {
             const resultadosFiltrados = pessoasData.filter((pessoa) => {
                 const nomeMatch = pessoa.nome.toLowerCase().includes(filtroNome.toLowerCase());
@@ -48,7 +51,7 @@ const FiltroPessoas = () => {
 
             setResultados(resultadosFiltrados);
         } else {
-            setResultados([]); // Se nenhum filtro estiver ativo, não há resultados a serem mostrados
+            setResultados([]);
         }
     };
 
