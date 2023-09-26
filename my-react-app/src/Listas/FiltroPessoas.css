@@ -1,0 +1,65 @@
+/* Estilo para o container principal ListaDePessoas */
+.list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 30px;
+}
+
+/* Estilo para o container de filtros */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Estilo para os campos de entrada de filtro */
+.filter-container input {
+    margin: 0 10px;
+    padding: 10px; /* Increase padding for height */
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Estilo para o botão de filtro */
+.filter-container button {
+    padding: 10px 20px; /* Increase padding for height and width */
+    background-color: #007bff; /* Azul */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+
+/* Estilo para a tabela de resultados */
+.table {
+    width: 80%; /* Ajuste a largura da tabela conforme necessário */
+    margin: 0 auto;
+    border: 1px solid #ccc;
+}
+
+/* Estilo para as células da tabela */
+.table td,
+.table th {
+    padding: 10px;
+    text-align: center;
+}
+
+/* Estilo para as células do cabeçalho da tabela */
+.table th {
+    background-color: #808080; /* Cinza */
+    color: white;
+}
+
+/* Estilo para as linhas ímpares da tabela */
+.table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Cinza claro */
+}
+
+/* Estilo para as linhas pares da tabela */
+.table tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Branco */
+}
