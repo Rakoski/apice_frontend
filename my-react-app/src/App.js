@@ -8,6 +8,7 @@ import { Route, Routes, BrowserRouter as Router, useNavigate } from 'react-route
 import FiltroPessoas from "./FiltroPessoas";
 import ListaDePessoas from "./ListaDePessoas";
 import ListaVenda from "./ListaVenda";
+import Venda from "./Venda";
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
@@ -49,7 +50,7 @@ function App() {
                         <Route path="/cidades" element={<h1>cidades</h1>} />
                         <Route path="/pessoas" element={<CadastroPessoa />} />
                         <Route path="/produtos" element={<h1>produtos</h1>} />
-                        <Route path="/vendas" element={<h1>Vendas</h1>} />
+                        <Route path="/vendas" element={<Venda />} />
                         <Route
                             path="/filtro de pessoas"
                             element={<FiltroPessoas />}
