@@ -18,6 +18,31 @@ const pessoasData = [
         Pessoa: 'Joana Lurdes',
         Total_venda: 790,
     },
+    {
+        id_venda: 2,
+        Pessoa: 'Joana Lurdes',
+        Total_venda: 790,
+    },
+    {
+        id_venda: 2,
+        Pessoa: 'Joana Lurdes',
+        Total_venda: 790,
+    },
+    {
+        id_venda: 2,
+        Pessoa: 'Joana Lurdes',
+        Total_venda: 790,
+    },
+    {
+        id_venda: 2,
+        Pessoa: 'Joana Lurdes',
+        Total_venda: 790,
+    },
+    {
+        id_venda: 2,
+        Pessoa: 'Joana Lurdes',
+        Total_venda: 790,
+    },
 ];
 
 const ListaVendas = ({ pessoa, onEditar, onDeletar, onIncluir }) => {

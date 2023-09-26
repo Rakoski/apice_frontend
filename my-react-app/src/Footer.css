@@ -1,7 +1,6 @@
-/* Footer.css */
 footer {
     position: sticky;
-    margin-top: 130px;
+    bottom: 0;
     background-color: #f9f9f9;
     border-top: 1px solid #ccc;
     padding: 10px;

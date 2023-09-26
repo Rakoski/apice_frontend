@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import Dropdowns from './Dropdowns';
 import Footer from "./Footer";
 import Header from "./Header";
@@ -9,18 +9,32 @@ import FiltroPessoas from "./FiltroPessoas";
 import ListaDePessoas from "./ListaDePessoas";
 import ListaVenda from "./ListaVenda";
 import Venda from "./Venda";
+import CadastroBairro from "./CadastroBairro";
+import ListaBairros from "./ListaBairros";
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
     const [inputValue2, setInputValue2] = useState('Movimentos');
     const [inputValue3, setInputValue3] = useState('Relatórios');
     const listItemWidth = '215px';
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (container) {
+            const screenHeight = window.innerHeight;
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const footerHeight = document.querySelector('footer').offsetHeight;
+            const minimumHeight = screenHeight - headerHeight - footerHeight;
+            container.style.minHeight = `${minimumHeight}px`;
+        }
+    }, []);
 
     return (
         <Router>
             <div>
                 <Header />
-                <div className="combobox-container">
+                <div className="combobox-container" ref={containerRef}>
                     <Dropdowns
                         options={['Bairros', 'Cidades', 'Pessoas', 'Produtos']}
                         listItemWidth={listItemWidth}
@@ -46,11 +60,15 @@ function App() {
                     />
 
                     <Routes>
-                        <Route path="/bairros" element={<h1>bairros</h1>} />
+                        <Route path="/bairros" element={<CadastroBairro />} />
                         <Route path="/cidades" element={<h1>cidades</h1>} />
                         <Route path="/pessoas" element={<CadastroPessoa />} />
                         <Route path="/produtos" element={<h1>produtos</h1>} />
                         <Route path="/vendas" element={<Venda />} />
+                        <Route
+                            path="/lista de bairros"
+                            element={<ListaBairros />}
+                        />
                         <Route
                             path="/filtro de pessoas"
                             element={<FiltroPessoas />}
@@ -59,7 +77,10 @@ function App() {
                             path="/lista de pessoas"
                             element={<ListaDePessoas />}
                         />
-                        <Route path="/lista de vendas" element={<ListaVenda />} />
+                        <Route
+                            path="/lista de vendas"
+                            element={<ListaVenda />}
+                        />
                     </Routes>
                 </div>
             </div>
