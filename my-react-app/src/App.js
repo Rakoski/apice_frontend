@@ -11,6 +11,8 @@ import ListaVenda from "./Listas/ListaVenda";
 import Venda from "./Cadastros/Venda";
 import CadastroBairro from "./Cadastros/CadastroBairro";
 import ListaBairros from "./Listas/ListaBairros";
+import CadastroProduto from "./Cadastros/CadastroProduto";
+import ListaDeProdutos from "./Listas/ListaProduto";
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
@@ -63,7 +65,7 @@ function App() {
                         <Route path="/bairros" element={<CadastroBairro />} />
                         <Route path="/cidades" element={<h1>cidades</h1>} />
                         <Route path="/pessoas" element={<CadastroPessoa />} />
-                        <Route path="/produtos" element={<h1>produtos</h1>} />
+                        <Route path="/produtos" element={<CadastroProduto />} />
                         <Route path="/vendas" element={<Venda />} />
                         <Route
                             path="/lista de bairros"
@@ -76,6 +78,10 @@ function App() {
                         <Route
                             path="/lista de pessoas"
                             element={<ListaDePessoas />}
+                        />
+                        <Route
+                            path="/lista de produtos"
+                            element={<ListaDeProdutos />}
                         />
                         <Route
                             path="/lista de vendas"

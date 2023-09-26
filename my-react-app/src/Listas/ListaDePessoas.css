@@ -3,6 +3,11 @@
     padding: 100px;
 }
 
+.small-input {
+    width: 250px;
+
+}
+
 .list-container {
     display: flex;
     flex-direction: column;
