@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import InputMask from 'react-input-mask';
 import './Venda.css'
-import ListaDeProdutosPraVenda from "./ListaDeProdutosPraMostrarNaVenda";
+import ListaDeProdutosPraVenda from "../Listas/ListaDeProdutosPraMostrarNaVenda";
 
 class VendaComponent extends Component {
     constructor(props) {

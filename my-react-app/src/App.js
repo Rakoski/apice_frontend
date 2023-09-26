@@ -2,15 +2,15 @@ import React, {useEffect, useRef, useState} from 'react';
 import Dropdowns from './Dropdowns';
 import Footer from "./Footer";
 import Header from "./Header";
-import CadastroPessoa from "./CadastroPessoa";
+import CadastroPessoa from "./Cadastros/CadastroPessoa";
 import './App.css'
 import { Route, Routes, BrowserRouter as Router, useNavigate } from 'react-router-dom';
-import FiltroPessoas from "./FiltroPessoas";
-import ListaDePessoas from "./ListaDePessoas";
-import ListaVenda from "./ListaVenda";
-import Venda from "./Venda";
-import CadastroBairro from "./CadastroBairro";
-import ListaBairros from "./ListaBairros";
+import FiltroPessoas from "./Listas/FiltroPessoas";
+import ListaDePessoas from "./Listas/ListaDePessoas";
+import ListaVenda from "./Listas/ListaVenda";
+import Venda from "./Cadastros/Venda";
+import CadastroBairro from "./Cadastros/CadastroBairro";
+import ListaBairros from "./Listas/ListaBairros";
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
