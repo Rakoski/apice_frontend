@@ -68,6 +68,11 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
         });
     };
 
+    const calculateTotal = () => {
+        return pessoasData.reduce((total, pessoa) => total +
+            calculateSubTotal(pessoa.quantidade_venda, pessoa.valor_unitario), 0);
+    };
+
     return (
         <div className="list-container">
             <div className="table-container">
@@ -111,6 +116,12 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
                     </tbody>
                 </Table>
             </div>
+
+            <div className="total-container">
+                <span className="total-label">Total:</span>
+                <span className="total-value">{calculateTotal()}</span>
+            </div>
+
 
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>

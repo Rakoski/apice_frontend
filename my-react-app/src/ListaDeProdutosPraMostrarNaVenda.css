@@ -66,7 +66,17 @@
     display: inline-block; /* Display them inline-block */
 }
 
-.link-button:hover,
-.button-incluir:hover {
-    background-color: #555;
+.total-container {
+    display: flex;
+    justify-content: flex-end; /* Align the total to the right */
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.total-label {
+    margin-right: 10px;
+}
+
+.total-value {
+    color: #007bff; /* Blue color for the total value */
 }
