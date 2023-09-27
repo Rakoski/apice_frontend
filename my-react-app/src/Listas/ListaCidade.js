@@ -39,8 +39,8 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                     <thead>
                     <tr>
                         <th>Código</th>
-                        <th>Nome do Produto</th>
-                        <th>Valor do Produto</th>
+                        <th>Cidade</th>
+                        <th>Estado</th>
                         <th>Ações</th>
                     </tr>
                     </thead>

@@ -65,7 +65,7 @@ const CadastroCidade = () => {
                 </button>
                 <Link to="/lista de cidades">
                     <button className="list-button" style={{ fontSize: '15px' }}>
-                        Listar Produtos
+                        Listar cidades
                     </button>
                 </Link>
             </div>
