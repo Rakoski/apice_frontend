@@ -6,7 +6,7 @@ import './ListaDePessoas.css';
 import { Link } from 'react-router-dom';
 import EditarModal from '../EditarModal';
 
-const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+const ListaDeBairros = () => {
     const [bairosData, setBairosData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState({});
@@ -17,8 +17,7 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
         fetch('http://localhost:8080/api/bairros')
             .then((response) => response.json())
             .then((data) => {
-                console.log(data); // Check the data received
-                setBairosData(data.data); // Update the state with data.data
+                setBairosData(data.data);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
@@ -26,17 +25,17 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     }, []);
 
     const handleOpenModal = (id) => {
-        const dataToDisplay = bairosData.find((p) => p.id_bairro === id); // Use id_bairro here
+        const dataToDisplay = bairosData.find((p) => p.id_bairro === id);
         if (dataToDisplay) {
             setModalData(dataToDisplay);
-            setEditedData({ ...dataToDisplay }); // Use a new object to avoid modifying the original data
+            setEditedData({ ...dataToDisplay });
             setShowModal(true);
         }
     };
 
     const handleSaveChanges = async () => {
         try {
-            const response = await fetch('your-api-endpoint', {
+            const response = await fetch(`http://localhost:8080/api/bairros/${editedData.id_bairro}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -46,11 +45,16 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
 
             if (response.ok) {
                 handleCloseModal();
+                // eu pensava que o react já fazia isso automáticamente mas pelo jeito preciso atualizar pra que
+                // as mudanças do banco de dados sejam passadas para a página, assim como é no JQuery
+                window.location.reload();
+
             } else {
-                console.error('Failed to update data');
+                alert('Falha em atualizar os dados, certifique-se de o código é um ID existente');
             }
+
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Erro:', error);
         }
     };
 
@@ -65,15 +69,39 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
         setShowModal(false);
     };
 
-    // Define your fields array here
     useEffect(() => {
         const fieldsArray = [
             { label: 'ID', name: 'id_bairro' },
             { label: 'Nome do Bairro', name: 'bairro_nome' },
-            // Add more fields as needed
         ];
         setFields(fieldsArray);
     }, []);
+
+    const onDeletar = async id_bairro => {
+        try {
+            const deleteData = {
+                id_bairro: id_bairro,
+                isDelete: true,
+            };
+
+            const response = await fetch(`http://localhost:8080/api/bairros/${id_bairro}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(deleteData), // Send the delete flag in the request body
+            });
+
+            if (response.ok) {
+                // Handle successful deletion
+                window.location.reload(); // Reload the page
+            } else {
+                console.error('Failed to delete neighborhood');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 
     return (
         <div className="list-container">
@@ -103,7 +131,7 @@ const ListaDeBairros = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                                     <EditarModal
                                         showModal={showModal}
                                         handleCloseModal={handleCloseModal}
-                                        fields={fields} // Pass the fields array to EditarModal
+                                        fields={fields}
                                         editedData={editedData}
                                         handleSaveChanges={handleSaveChanges}
                                         handleInputChange={handleInputChange}

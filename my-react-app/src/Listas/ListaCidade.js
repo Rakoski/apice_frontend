@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ListaDePessoas.css';
 import { Link } from 'react-router-dom';
+import EditarModal from "../EditarModal";
 
 const produtosData = [
     {
@@ -18,20 +19,49 @@ const produtosData = [
     },
 ];
 
-const handleEditar = (id) => {
-    console.log(`Editar pessoa com ID ${id}`);
-};
-
-const handleDeletar = (id) => {
-    console.log(`Deletar pessoa com ID ${id}`);
-};
-
-const handleIncluir = () => {
-    console.log('Incluir pessoa');
-};
-
 
 const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+    const [showModal, setShowModal] = useState(false);
+    const [modalData, setModalData] = useState({});
+    const [editedData, setEditedData] = useState({});
+    const [fields, setFields] = useState([]);
+    const brazilianStates = [
+        'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+    ];
+
+
+    const handleOpenModal = (produto) => {
+        setModalData(produto);
+        setEditedData({ ...produto });
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const handleSaveChanges = async () => {
+        // Implement your save changes logic here
+        // You can use the editedData state to send data to your API
+        handleCloseModal();
+    };
+
+    const handleInputChange = (name, value) => {
+        setEditedData({
+            ...editedData,
+            [name]: value,
+        });
+    };
+
+    useEffect(() => {
+        const fieldsArray = [
+            { label: 'ID', name: 'id_cidade' },
+            { label: 'Nome da cidade', name: 'cidade_nome' },
+            { label: 'Sigla UF', name: 'sigla_uf' }
+        ];
+        setFields(fieldsArray);
+    }, []);
+
     return (
         <div className="list-container">
             <div className="table-container">
@@ -53,7 +83,7 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
-                                    onClick={() => onEditar(produto.id_cidade)}
+                                    onClick={() => handleOpenModal(produto)} // Pass the current produto to open the modal
                                     className="edit-button"
                                 >
                                     <FaEdit className="fa-edit" /> Editar
@@ -74,10 +104,21 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
             <Link to="/cidades" className="link-button">
                 Incluir
             </Link>
+            {showModal && (
+                <EditarModal
+                    showModal={showModal}
+                    handleCloseModal={handleCloseModal}
+                    fields={fields}
+                    editedData={editedData}
+                    handleSaveChanges={handleSaveChanges}
+                    handleInputChange={handleInputChange}
+                    brazilianStates={brazilianStates}
+                />
+            )}
         </div>
-
     );
 };
+
 
 export default ListaDeProdutos;
 export {produtosData};

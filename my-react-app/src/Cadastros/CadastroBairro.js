@@ -4,20 +4,39 @@ import { Link } from 'react-router-dom';
 
 const CadastroBairro = () => {
     const [codigo, setCodigo] = useState('');
-    const [nome, setNome] = useState('');
+    const [bairro_nome, setBairro_nome] = useState('');
 
     const handleConfirmar = () => {
-        // Lógica pra mandar os dados aqui
         const formData = {
-            codigo,
-            nome,
+            bairro_nome: bairro_nome,
+            id_bairro: codigo
         };
-        //vou mandar os dados pra minha API aqui
+        const jsonData = JSON.stringify(formData);
+
+        fetch('http://localhost:8080/api/bairros', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: jsonData,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Resposta não foi ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Bairro criado com sucesso!');
+            })
+            .catch(error => {
+                console.error('Erro: ', error);
+                alert("Código já existente, por favor, insira outro.")
+            });
     };
 
     const handleCancelar = () => {
-        setCodigo('');
-        setNome('');
+        setBairro_nome('');
     };
 
     return (
@@ -38,8 +57,8 @@ const CadastroBairro = () => {
                     <input
                         type="text"
                         className="nome-input"
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
+                        value={bairro_nome}
+                        onChange={(e) => setBairro_nome(e.target.value)}
                     />
                 </div>
             </div>
