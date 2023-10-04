@@ -36,7 +36,7 @@ const CadastroCidade = () => {
         if (!cidadesDoEstado.includes(cidade_nome)) {
             alert('Esta cidade não pertence ao estado selecionado. Verifique os dados.');
             return;
-        };
+        }
 
         const formData = {
             id_cidade,

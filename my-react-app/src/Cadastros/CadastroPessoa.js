@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './CadastroPessoa.css';
 import { Link } from 'react-router-dom';
 
@@ -13,26 +13,68 @@ const CadastroPessoa = () => {
     const [complemento, setComplemento] = useState('');
     const [telefone, setTelefone] = useState('');
     const [email, setEmail] = useState('');
+    const [cidadesData, setCidadesData] = useState([]);
+    const [bairrosData, setBairrosData] = useState([]);
 
-    const handleConfirmar = () => {
-        // Here you can add the logic to send a POST request to register a person
-        const formData = {
-            codigo,
-            nome,
-            cidade,
-            bairro,
-            cep,
-            endereco,
-            numero,
-            complemento,
-            telefone,
-            email,
-        };
-        // Send the formData to your backend API here
+
+    // bom primeiro é necessário pegar os bairros e as cidades pra mostrarem os registrados no dropdown, caso contrário
+    // precisa registrar eles primeiro, daí só depois que a gente consegue mandar a requisição POST né
+    useEffect(() => {
+        fetch('http://localhost:8080/api/cidades')
+            .then((response) => response.json())
+            .then((data) => {
+                setCidadesData(data);
+            })
+            .catch((error) => {
+                console.error('Erro ao pegar os dados das cidades:', error);
+            });
+
+        fetch('http://localhost:8080/api/bairros')
+            .then((response) => response.json())
+            .then((data) => {
+                setBairrosData(data);
+            })
+            .catch((error) => {
+                console.error('Erro ao pegar os dados dos bairros:', error);
+            });
+    }, []);
+
+
+    const handleConfirmar = async () => {
+        try {
+            const formData = {
+                id_pessoa: codigo,
+                pessoa_nome: nome,
+                cidade_id: cidade,
+                bairro_id: bairro,
+                cep,
+                endereco,
+                numero,
+                complemento,
+                telefone,
+                email,
+            };
+
+            const response = await fetch('http://localhost:8080/api/pessoas', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                alert('Pessoa registrada com sucesso!');
+                handleCancelar();
+            } else {
+                alert('Falha ao registrar a pessoa. Verifique os campos e tente novamente.');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+        }
     };
 
     const handleCancelar = () => {
-        // Clear the form fields
         setCodigo('');
         setNome('');
         setCidade('');
@@ -76,8 +118,11 @@ const CadastroPessoa = () => {
                         value={cidade}
                         onChange={(e) => setCidade(e.target.value)}
                     >
-                        <option value="cidade1">Cidade 1</option>
-                        <option value="cidade2">Cidade 2</option>
+                        {cidadesData.data?.map((cidadeItem) => (
+                            <option key={cidadeItem.id_cidade} value={cidadeItem.id_cidade}>
+                                {cidadeItem.cidade_nome}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div className="form-group">
@@ -87,11 +132,15 @@ const CadastroPessoa = () => {
                         value={bairro}
                         onChange={(e) => setBairro(e.target.value)}
                     >
-                        <option value="bairro1">Bairro 1</option>
-                        <option value="bairro2">Bairro 2</option>
+                        {bairrosData.data?.map((bairroItem) => (
+                            <option key={bairroItem.id_bairro} value={bairroItem.id_bairro}>
+                                {bairroItem.bairro_nome}
+                            </option>
+                        ))}
                     </select>
                 </div>
             </div>
+
             <div className="form-row">
                 <div className="form-group">
                     <label>CEP:</label>
