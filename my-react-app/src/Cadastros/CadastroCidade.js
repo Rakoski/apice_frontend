@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './CadastroPessoa.css';
 import { Link } from 'react-router-dom';
 
@@ -11,8 +11,33 @@ const CadastroCidade = () => {
     const [id_cidade, setCodigo] = useState('');
     const [cidade_nome, setCidade] = useState('');
     const [sigla_uf, setSigla] = useState('');
+    const [cidadesDoEstado, setCidadesDoEstado] = useState([]);
+
+
+    // vou utilizar a api do IBGE para que eu não possa cadastrar, por exemplo Porto Alegre como se estivesse no
+    // Paraná, ou como se Paranavaí estivesse no RJ
+    useEffect(() => {
+        if (sigla_uf) {
+            fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${sigla_uf}/municipios`)
+                .then(response => response.json())
+                .then(data => {
+                    const nomesCidades = data.map(cidade => cidade.nome);
+                    setCidadesDoEstado(nomesCidades);
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar cidades: ', error);
+                });
+        }
+    }, [sigla_uf]);
+
 
     const handleConfirmar = () => {
+
+        if (!cidadesDoEstado.includes(cidade_nome)) {
+            alert('Esta cidade não pertence ao estado selecionado. Verifique os dados.');
+            return;
+        };
+
         const formData = {
             id_cidade,
             cidade_nome,
@@ -78,7 +103,6 @@ const CadastroCidade = () => {
                         onChange={(e) => setSigla(e.target.value)}
                         style={{ fontSize: '16px' }}
                     >
-
                         {estadosBrasileiros.map(sigla_uf => (
                             <option key={sigla_uf} value={sigla_uf}>{sigla_uf}</option>
                         ))}

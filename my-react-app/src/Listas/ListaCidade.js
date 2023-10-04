@@ -6,6 +6,10 @@ import './ListaDePessoas.css';
 import { Link } from 'react-router-dom';
 import EditarModal from "../EditarModal";
 
+const brazilianStates = [
+    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
+    'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
 
 const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     const [cidadesData, setCidadesData] = useState([]);
@@ -13,10 +17,7 @@ const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     const [modalData, setModalData] = useState({});
     const [editedData, setEditedData] = useState({});
     const [fields, setFields] = useState([]);
-    const brazilianStates = [
-        'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
-        'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
-    ];
+    const [cidadesDoEstadoSelecionado, setCidadesDoEstadoSelecionado] = useState([]);
 
     useEffect(() => {
         fetch('http://localhost:8080/api/cidades')
@@ -30,9 +31,20 @@ const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     }, []);
 
 
-    const handleOpenModal = (cidades) => {
-        setModalData(cidades);
-        setEditedData({ ...cidades });
+    const handleOpenModal = (cidade) => {
+        setModalData(cidade);
+        setEditedData({ ...cidade });
+
+        fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${cidade.sigla_uf}/municipios`)
+            .then((response) => response.json())
+            .then((data) => {
+                const nomesCidades = data.map((cidade) => cidade.nome);
+                setCidadesDoEstadoSelecionado(nomesCidades);
+            })
+            .catch((error) => {
+                console.error('Erro ao buscar as cidades do estado:', error);
+            });
+
         setShowModal(true);
     };
 
@@ -49,6 +61,11 @@ const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     };
 
     const handleSaveChanges = async () => {
+        if (!cidadesDoEstadoSelecionado.includes(editedData.cidade_nome)) {
+            alert('Esta cidade não pertence ao estado selecionado. Verifique os dados.');
+            return;
+        }
+
         try {
             const updatedData = {
                 cidade_nome: editedData.cidade_nome,
@@ -65,12 +82,12 @@ const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
 
             handleCloseModal();
             window.location.reload();
-
         } catch (error) {
             alert('Falha em atualizar os dados, certifique-se de que o código é um ID existente');
             console.error('Erro:', error);
         }
     };
+
 
 
     const handleDelete = async (id_cidade) => {
