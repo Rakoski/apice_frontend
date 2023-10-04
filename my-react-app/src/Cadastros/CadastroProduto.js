@@ -5,23 +5,41 @@ import { Link } from 'react-router-dom';
 const CadastroPessoa = () => {
     const [codigo, setCodigo] = useState('');
     const [nome, setNome] = useState('');
-    const [valorVenda, setValorVenda] = useState('');
+    const [valor, setValorProduto] = useState('');
 
-    const handleConfirmar = () => {
-        // Here you can add the logic to send a POST request to register a person
-        const formData = {
-            codigo,
-            nome,
-            valorVenda,
-        };
-        // Send the formData to your backend API here
+    const handleConfirmar = async () => {
+        try {
+            const formData = {
+                id_produto: codigo,
+                nome_produto: nome,
+                valor_produto: valor
+            };
+
+            parseFloat(formData.valor_produto)
+
+            const response = await fetch('http://localhost:8080/api/produtos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+            console.log(formData)
+
+            if (response.ok) {
+                alert('Produto registrada com sucesso!');
+                handleCancelar();
+            } else {
+                alert('Falha ao registrar o Produto. Verifique os campos e tente novamente.');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+        }
     };
-
     const handleCancelar = () => {
-        // Clear the form fields
         setCodigo('');
         setNome('');
-        setValorVenda('');
+        setValorProduto('');
     };
 
     return (
@@ -50,9 +68,9 @@ const CadastroPessoa = () => {
                     <label>Valor de Venda:</label>
                     <input
                         type="text"
-                        className="nome-input small-input" // Add "small-input" class
-                        value={nome}
-                        onChange={(e) => setNome(e.target.value)}
+                        className="nome-input small-input"
+                        value={valor}
+                        onChange={(e) => setValorProduto(e.target.value)}
                     />
                 </div>
             </div>
