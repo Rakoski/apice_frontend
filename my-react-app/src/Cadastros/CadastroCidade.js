@@ -2,23 +2,47 @@ import React, { useState } from 'react';
 import './CadastroPessoa.css';
 import { Link } from 'react-router-dom';
 
+const estadosBrasileiros = [
+    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
+    'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
+
 const CadastroCidade = () => {
-    const [codigo, setCodigo] = useState('');
-    const [cidade, setCidade] = useState('');
-    const [sigla, setSigla] = useState('');
+    const [id_cidade, setCodigo] = useState('');
+    const [cidade_nome, setCidade] = useState('');
+    const [sigla_uf, setSigla] = useState('');
 
     const handleConfirmar = () => {
-        // Here you can add the logic to send a POST request to register a person
         const formData = {
-            codigo,
-            cidade,
-            sigla,
+            id_cidade,
+            cidade_nome,
+            sigla_uf,
         };
-        // Send the formData to your backend API here
+        const jsonData = JSON.stringify(formData);
+
+        fetch('http://localhost:8080/api/cidades', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: jsonData,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Resposta não foi ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Cidade criada com sucesso!');
+            })
+            .catch(error => {
+                console.error('Erro: ', error);
+                alert("Código já existente, por favor, insira outro.")
+            });
     };
 
     const handleCancelar = () => {
-        // Clear the form fields
         setCodigo('');
         setCidade('');
         setSigla('');
@@ -33,7 +57,7 @@ const CadastroCidade = () => {
                     <input
                         type="text"
                         className="codigo-input"
-                        value={codigo}
+                        value={id_cidade}
                         onChange={(e) => setCodigo(e.target.value)}
                     />
                 </div>
@@ -42,18 +66,23 @@ const CadastroCidade = () => {
                     <input
                         type="text"
                         className="nome-input"
-                        value={cidade}
+                        value={cidade_nome}
                         onChange={(e) => setCidade(e.target.value)}
                     />
                 </div>
                 <div className="form-group">
                     <label>Sigla UF:</label>
-                    <input
-                        type="text"
+                    <select
                         className="nome-input small-input"
-                        value={sigla}
+                        value={sigla_uf}
                         onChange={(e) => setSigla(e.target.value)}
-                    />
+                        style={{ fontSize: '16px' }}
+                    >
+
+                        {estadosBrasileiros.map(sigla_uf => (
+                            <option key={sigla_uf} value={sigla_uf}>{sigla_uf}</option>
+                        ))}
+                    </select>
                 </div>
             </div>
             <div className="button-container">

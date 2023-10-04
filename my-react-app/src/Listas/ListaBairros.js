@@ -20,7 +20,7 @@ const ListaDeBairros = () => {
                 setBairosData(data.data);
             })
             .catch((error) => {
-                console.error('Error fetching data:', error);
+                console.error('Erro ao pegar os dados dos bairros:', error);
             });
     }, []);
 

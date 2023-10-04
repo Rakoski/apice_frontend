@@ -6,45 +6,36 @@ import './ListaDePessoas.css';
 import { Link } from 'react-router-dom';
 import EditarModal from "../EditarModal";
 
-const produtosData = [
-    {
-        id_cidade: 1,
-        nome_cidade: 'São Paulo',
-        sigla_uf: 'SP'
-    },
-    {
-        id_cidade: 2,
-        nome_cidade: 'Rio de Janeiro',
-        sigla_uf: 'RJ'
-    },
-];
 
-
-const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+    const [cidadesData, setCidadesData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState({});
     const [editedData, setEditedData] = useState({});
     const [fields, setFields] = useState([]);
     const brazilianStates = [
-        'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+        'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI',
+        'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
     ];
 
+    useEffect(() => {
+        fetch('http://localhost:8080/api/cidades')
+            .then((response) => response.json())
+            .then((data) => {
+                setCidadesData(data.data);
+            })
+            .catch((error) => {
+                console.error('Erro ao pegar os dados das cidades:', error);
+            });
+    }, []);
 
-    const handleOpenModal = (produto) => {
-        setModalData(produto);
-        setEditedData({ ...produto });
+
+    const handleOpenModal = (cidades) => {
+        setModalData(cidades);
+        setEditedData({ ...cidades });
         setShowModal(true);
     };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
-
-    const handleSaveChanges = async () => {
-        // Implement your save changes logic here
-        // You can use the editedData state to send data to your API
-        handleCloseModal();
-    };
 
     const handleInputChange = (name, value) => {
         setEditedData({
@@ -53,11 +44,66 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
         });
     };
 
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
+    const handleSaveChanges = async () => {
+        try {
+            const updatedData = {
+                cidade_nome: editedData.cidade_nome,
+                sigla_uf: editedData.sigla_uf,
+            };
+
+            const response = await fetch(`http://localhost:8080/api/cidades/${editedData.id_cidade}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedData),
+            });
+
+            handleCloseModal();
+            window.location.reload();
+
+        } catch (error) {
+            alert('Falha em atualizar os dados, certifique-se de que o código é um ID existente');
+            console.error('Erro:', error);
+        }
+    };
+
+
+    const handleDelete = async (id_cidade) => {
+        try {
+            const deleteData = {
+                id_cidade: id_cidade,
+                isDelete: true,
+            };
+
+            const response = await fetch(`http://localhost:8080/api/cidades/${id_cidade}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(deleteData),
+            });
+
+            if (response.ok) {
+                window.location.reload();
+            } else {
+                console.error('Falha em deletar cidade');
+                window.location.reload();
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+    };
+
     useEffect(() => {
         const fieldsArray = [
             { label: 'ID', name: 'id_cidade' },
             { label: 'Nome da cidade', name: 'cidade_nome' },
-            { label: 'Sigla UF', name: 'sigla_uf' }
+            { label: 'Sigla UF', name: 'sigla_uf' },
         ];
         setFields(fieldsArray);
     }, []);
@@ -75,22 +121,22 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {produtosData.map((produto) => (
-                        <tr key={produto.id_cidade}>
-                            <td>{produto.id_cidade}</td>
-                            <td>{produto.nome_cidade}</td>
-                            <td>{produto.sigla_uf}</td>
+                    {cidadesData.map((cidade) => (
+                        <tr key={cidade.id_cidade}>
+                            <td>{cidade.id_cidade}</td>
+                            <td>{cidade.cidade_nome}</td>
+                            <td>{cidade.sigla_uf}</td>
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
-                                    onClick={() => handleOpenModal(produto)} // Pass the current produto to open the modal
+                                    onClick={() => handleOpenModal(cidade)}
                                     className="edit-button"
                                 >
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
                                 <Button
                                     variant="danger"
-                                    onClick={() => onDeletar(produto.id_cidade)}
+                                    onClick={() => handleDelete(cidade.id_cidade)}
                                     className="delete-button"
                                 >
                                     <FaTrash className="fa-trash" /> Deletar
@@ -120,5 +166,4 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
 };
 
 
-export default ListaDeProdutos;
-export {produtosData};
+export default ListaDeCidades;

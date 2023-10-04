@@ -36,6 +36,7 @@ const CadastroBairro = () => {
     };
 
     const handleCancelar = () => {
+        setCodigo('');
         setBairro_nome('');
     };
 
