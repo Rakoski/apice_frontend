@@ -19,7 +19,7 @@ O projeto é uma aplicação de gerenciamento de informações relacionadas a ba
 
 1. Clone este repositório em sua máquina local:
 
-<code>git clone https://github.com/seu-usuario/apice-sistemas-estagio.git</code>
+<code>git clone [https://github.com/seu-usuario/apice-sistemas-estagio.git](https://github.com/Rakoski/apice_frontend.git)</code>
 
 2. Navegue para o diretório do projeto:
 
