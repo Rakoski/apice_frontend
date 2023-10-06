@@ -22,8 +22,6 @@ O projeto é uma aplicação de gerenciamento de informações relacionadas a ba
 
 2. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
 
-npm start
-
 3. inicie o servidor frontend:
 
 <code>npm start</code>
