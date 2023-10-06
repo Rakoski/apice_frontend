@@ -5,8 +5,13 @@ import { Link } from 'react-router-dom';
 const CadastroPessoa = () => {
     const [codigo, setCodigo] = useState('');
     const [nome, setNome] = useState('');
-    const [cidade, setCidade] = useState('');
-    const [bairro, setBairro] = useState('');
+
+    // vou deixar os 2 aqui como 16 e 1 pois 16 seria "Jardins" e 1 seria "Ipanema" aka os bairros selecionados
+    // no começo se o usuário não selecionar nenhum outro
+    const [cidade, setCidade] = useState('16');
+    const [bairro, setBairro] = useState('1');
+
+
     const [cep, setCep] = useState('');
     const [endereco, setEndereco] = useState('');
     const [numero, setNumero] = useState('');
@@ -17,8 +22,8 @@ const CadastroPessoa = () => {
     const [bairrosData, setBairrosData] = useState([]);
 
 
-    // bom primeiro é necessário pegar os bairros e as cidades pra mostrarem os registrados no dropdown, caso contrário
-    // precisa registrar eles primeiro, daí só depois que a gente consegue mandar a requisição POST né
+    // primeiro vou pegar os bairros e as cidades pra mostrarem os registrados no dropdown,
+    // caso contrário precisa registrar eles primeiro, daí só depois que a gente consegue mandar a requisição POST
     useEffect(() => {
         fetch('http://localhost:8080/api/cidades')
             .then((response) => response.json())

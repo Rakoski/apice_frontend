@@ -1,37 +1,94 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ListaDePessoas.css';
 import { Link } from 'react-router-dom';
+import EditarModal from "../EditarModal";
 
-const produtosData = [
-    {
-        id_produto: 1,
-        nome_produto: 'Camiseta branca',
-        valor_produto: 87.90
-    },
-    {
-        id_produto: 2,
-        nome_produto: 'Coxinha de carne',
-        valor_produto: 5.90
-    },
-];
+const ListaDePessoas = ({}) => {
+    const [produtosData, setPessoasData] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [modalData, setModalData] = useState({});
+    const [editedData, setEditedData] = useState({});
+    const [fields, setFields] = useState([]);
 
-const handleEditar = (id) => {
-    console.log(`Editar pessoa com ID ${id}`);
-};
+    useEffect(() => {
+        fetch('http://localhost:8080/api/produtos')
+            .then((response) => response.json())
+            .then((data) => setPessoasData(data.data))
+            .catch((error) => console.error('Erro ao pegar os dados:', error));
+    }, []);
 
-const handleDeletar = (id) => {
-    console.log(`Deletar pessoa com ID ${id}`);
-};
+    const handleOpenModal = (cidade) => {
+        setModalData(cidade);
+        setEditedData({ ...cidade });
+        setShowModal(true);
+    };
 
-const handleIncluir = () => {
-    console.log('Incluir pessoa');
-};
+    const handleInputChange = (name, value) => {
+        setEditedData({
+            ...editedData,
+            [name]: value,
+        });
+    };
 
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
 
-const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+    const handleSaveChanges = async () => {
+        try {
+            const updatedData = {
+                nome_produto: editedData.nome_produto,
+                valor_produto: editedData.valor_produto,
+            };
+
+            parseFloat(updatedData.valor_produto)
+
+            console.log(produtosData.id_produto)
+
+            const response = await fetch(`http://localhost:8080/api/produtos/${editedData.id_produto}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedData),
+            });
+            console.log(updatedData)
+
+            handleCloseModal();
+            window.location.reload();
+
+        } catch (error) {
+            alert('Falha em atualizar os dados, certifique-se de que o código é um ID existente');
+            console.error('Erro:', error);
+        }
+    };
+
+    const handleDelete = (id_produto) => {
+        fetch(`http://localhost:8080/api/produtos/${id_produto}`, {
+            method: 'DELETE',
+        })
+            .then((response) => {
+                setPessoasData((prevState) =>
+                        prevState.filter((produto) => produto.id_produto !== id_produto)
+                    );
+                    window.location.reload();
+
+            })
+            .catch((error) => console.error('Erro ao deletar produto:', error));
+    };
+
+    useEffect(() => {
+        const fieldsArray = [
+            { label: 'ID', name: 'id_produto' },
+            { label: 'Nome do produto', name: 'nome_produto' },
+            { label: 'Valor do produto', name: 'valor_produto' },
+        ];
+        setFields(fieldsArray);
+    }, []);
+
     return (
         <div className="list-container">
             <div className="table-container">
@@ -49,18 +106,18 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                         <tr key={produto.id_produto}>
                             <td>{produto.id_produto}</td>
                             <td>{produto.nome_produto}</td>
-                            <td>{produto.valor_produto.toFixed(2)}</td>
+                            <td>{parseFloat(produto.valor_produto).toFixed(2)}</td>
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
-                                    onClick={() => onEditar(produto.id_produto)}
+                                    onClick={() => handleOpenModal(produto)}
                                     className="edit-button"
                                 >
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
                                 <Button
                                     variant="danger"
-                                    onClick={() => onDeletar(produto.id_produto)}
+                                    onClick={() => handleDelete(produto.id_produto)}
                                     className="delete-button"
                                 >
                                     <FaTrash className="fa-trash" /> Deletar
@@ -71,13 +128,21 @@ const ListaDeProdutos = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                     </tbody>
                 </Table>
             </div>
-            <Link to="/bairros" className="link-button">
+            <Link to="/produtos" className="link-button">
                 Incluir
             </Link>
+            {showModal && (
+                <EditarModal
+                    showModal={showModal}
+                    handleCloseModal={handleCloseModal}
+                    fields={fields}
+                    editedData={editedData}
+                    handleSaveChanges={handleSaveChanges}
+                    handleInputChange={handleInputChange}
+                />
+            )}
         </div>
-
     );
 };
 
-export default ListaDeProdutos;
-export {produtosData};
+export default ListaDePessoas;

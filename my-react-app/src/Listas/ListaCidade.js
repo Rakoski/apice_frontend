@@ -11,7 +11,7 @@ const brazilianStates = [
     'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
 ];
 
-const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+const ListaDeCidades = ({}) => {
     const [cidadesData, setCidadesData] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState({});
@@ -61,11 +61,6 @@ const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
     };
 
     const handleSaveChanges = async () => {
-        if (!cidadesDoEstadoSelecionado.includes(editedData.cidade_nome)) {
-            alert('Esta cidade não pertence ao estado selecionado. Verifique os dados.');
-            return;
-        }
-
         try {
             const updatedData = {
                 cidade_nome: editedData.cidade_nome,
@@ -82,12 +77,12 @@ const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
 
             handleCloseModal();
             window.location.reload();
+
         } catch (error) {
             alert('Falha em atualizar os dados, certifique-se de que o código é um ID existente');
             console.error('Erro:', error);
         }
     };
-
 
 
     const handleDelete = async (id_cidade) => {
@@ -173,7 +168,7 @@ const ListaDeCidades = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                     handleCloseModal={handleCloseModal}
                     fields={fields}
                     editedData={editedData}
-                    handleSaveChanges={handleSaveChanges}
+                    handleSaveChanges={() => handleSaveChanges(editedData)}
                     handleInputChange={handleInputChange}
                     brazilianStates={brazilianStates}
                 />
