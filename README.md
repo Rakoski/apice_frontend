@@ -1,0 +1,80 @@
+README - Projeto de Estágio Ápice Sistemas
+
+Este é o README para o projeto desenvolvido com o objetivo de se candidatar a um estágio na companhia Ápice Sistemas. O projeto é uma aplicação web construída com React para o frontend, Node.js, Express e Sequelize para o backend, e utiliza um banco de dados MySQL. A seguir, fornecemos informações essenciais sobre o projeto e como configurá-lo para execução.
+Visão Geral do Projeto
+
+O projeto é uma aplicação de gerenciamento de informações relacionadas a bairros, cidades, pessoas, produtos e vendas. Ele oferece funcionalidades de cadastro, consulta e relatórios para facilitar o gerenciamento de dados relacionados a essas entidades.
+Requisitos
+
+    Node.js: Certifique-se de que o Node.js está instalado em seu sistema. Você pode baixá-lo em nodejs.org.
+
+Configuração do Projeto
+
+    Clone este repositório em sua máquina local:
+
+    bash
+
+git clone https://github.com/seu-usuario/apice-sistemas-estagio.git
+
+Navegue para o diretório do projeto:
+
+bash
+
+cd apice-sistemas-estagio
+
+Instale as dependências do frontend e do backend executando o seguinte comando em dois terminais separados:
+
+bash
+
+cd frontend
+npm install
+
+bash
+
+cd backend
+npm install
+
+Configure o banco de dados MySQL com as credenciais apropriadas no arquivo backend/config/database.js.
+
+Execute as migrações do banco de dados para criar as tabelas necessárias:
+
+bash
+
+cd backend
+npx sequelize-cli db:migrate
+
+Inicie o servidor backend:
+
+sql
+
+npm start
+
+Em outro terminal, inicie o servidor frontend:
+
+bash
+
+    cd frontend
+    npm start
+
+    A aplicação estará disponível em http://localhost:3000.
+
+Funcionalidades
+
+O projeto oferece as seguintes funcionalidades:
+
+    Cadastro e edição de bairros, cidades, pessoas, produtos e vendas.
+    Listagem e filtragem de bairros, cidades, pessoas, produtos e vendas.
+    Geração de relatórios com base nos dados cadastrados.
+    Navegação intuitiva por meio de dropdowns na interface.
+
+Contribuição
+
+Este projeto foi desenvolvido com o objetivo de demonstrar habilidades e conhecimentos relevantes para um estágio na Ápice Sistemas. Se você deseja contribuir ou tem alguma dúvida específica sobre o projeto, sinta-se à vontade para entrar em contato.
+Contato
+
+Para mais informações ou dúvidas, entre em contato com o desenvolvedor:
+
+Nome: Seu Nome
+Email: seu.email@example.com
+
+Obrigado por avaliar este projeto! Esperamos que ele atenda às suas expectativas.
