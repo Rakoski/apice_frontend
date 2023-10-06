@@ -16,17 +16,17 @@ O projeto é uma aplicação de gerenciamento de informações relacionadas a ba
 
 <code>git clone https://github.com/seu-usuario/apice-sistemas-estagio.git</code>
 
-## Navegue para o diretório do projeto:
+2. Navegue para o diretório do projeto:
 
 <code>cd src</code>
 
-2. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
+3. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
 
-3. inicie o servidor frontend:
+4. inicie o servidor frontend:
 
 <code>npm start</code>
 
-4. A aplicação estará disponível em http://localhost:3000.
+5. A aplicação estará disponível em http://localhost:3000.
 
 ## Funcionalidades
 
