@@ -1,28 +1,28 @@
-README - Projeto de Estágio Ápice Sistemas
+# README - Projeto de Estágio Ápice Sistemas
 
-Este é o README para o projeto desenvolvido com o objetivo de se candidatar a um estágio na companhia Ápice Sistemas. O projeto é uma aplicação web construída com React para o frontend, Node.js, Express e Sequelize para o backend, e utiliza um banco de dados MySQL. A seguir, fornecemos informações essenciais sobre o projeto e como configurá-lo para execução.
-Visão Geral do Projeto
+## Este é o README para o projeto desenvolvido com o objetivo de se candidatar a um estágio na companhia Ápice Sistemas. O projeto é uma aplicação web construída com React para o frontend, Node.js, Express e Sequelize para o backend, e utiliza um banco de dados MySQL. A seguir, fornecemos informações essenciais sobre o projeto e como configurá-lo para execução.
 
-O projeto é uma aplicação de gerenciamento de informações relacionadas a bairros, cidades, pessoas, produtos e vendas. Ele oferece funcionalidades de cadastro, consulta e relatórios para facilitar o gerenciamento de dados relacionados a essas entidades.
-Requisitos
+## Visão Geral do Projeto
+
+## O projeto é uma aplicação de gerenciamento de informações relacionadas a bairros, cidades, pessoas, produtos e vendas. Ele oferece funcionalidades de cadastro, consulta e relatórios para facilitar o gerenciamento de dados relacionados a essas entidades.
+
+## Requisitos
 
     Node.js: Certifique-se de que o Node.js está instalado em seu sistema. Você pode baixá-lo em nodejs.org.
 
-Configuração do Projeto
+## Configuração do Projeto
 
-    Clone este repositório em sua máquina local:
+1. Clone este repositório em sua máquina local:
 
-    bash
+    <code>git clone https://github.com/seu-usuario/apice-sistemas-estagio.git</code>
 
-git clone https://github.com/seu-usuario/apice-sistemas-estagio.git
-
-Navegue para o diretório do projeto:
+## Navegue para o diretório do projeto:
 
 bash
 
-cd apice-sistemas-estagio
+    cd apice-sistemas-estagio
 
-Instale as dependências do frontend e do backend executando o seguinte comando em dois terminais separados:
+## Instale as dependências do frontend e do backend executando o seguinte comando em dois terminais separados:
 
 bash
 
