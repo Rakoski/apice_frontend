@@ -8,6 +8,11 @@ O projeto é uma aplicação de gerenciamento de informações relacionadas a ba
 
 ## Requisitos
 
+- React: Certifique-se de instalar o React em seu sistema e que a porta 3000 não esteja usando outros processos. É possível verificar isso em Linux com:
+
+<code>netstat -tuln | grep 3000</code>
+<code>lsof -i :3000</code>
+
 - Node.js: Certifique-se de que o Node.js está instalado em seu sistema. Você pode baixá-lo em nodejs.org.
 
 ## Configuração do Projeto
