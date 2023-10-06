@@ -8,7 +8,7 @@
 
 ## Requisitos
 
-    Node.js: Certifique-se de que o Node.js está instalado em seu sistema. Você pode baixá-lo em nodejs.org.
+- Node.js: Certifique-se de que o Node.js está instalado em seu sistema. Você pode baixá-lo em nodejs.org.
 
 ## Configuração do Projeto
 
@@ -18,63 +18,41 @@
 
 ## Navegue para o diretório do projeto:
 
-bash
+ <code>cd src<code>
 
-    cd apice-sistemas-estagio
-
-## Instale as dependências do frontend e do backend executando o seguinte comando em dois terminais separados:
-
-bash
-
-cd frontend
-npm install
-
-bash
-
-cd backend
-npm install
-
-Configure o banco de dados MySQL com as credenciais apropriadas no arquivo backend/config/database.js.
-
-Execute as migrações do banco de dados para criar as tabelas necessárias:
-
-bash
-
-cd backend
-npx sequelize-cli db:migrate
-
-Inicie o servidor backend:
-
-sql
+2. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
 
 npm start
 
-Em outro terminal, inicie o servidor frontend:
+3. inicie o servidor frontend:
 
-bash
+<code>npm start</code>
 
-    cd frontend
-    npm start
+4. A aplicação estará disponível em http://localhost:3000.
 
-    A aplicação estará disponível em http://localhost:3000.
-
-Funcionalidades
+## Funcionalidades
 
 O projeto oferece as seguintes funcionalidades:
 
-    Cadastro e edição de bairros, cidades, pessoas, produtos e vendas.
-    Listagem e filtragem de bairros, cidades, pessoas, produtos e vendas.
-    Geração de relatórios com base nos dados cadastrados.
-    Navegação intuitiva por meio de dropdowns na interface.
+- Cadastro e edição de bairros, cidades, pessoas, produtos e vendas.
+- Listagem e filtragem de bairros, cidades, pessoas, produtos e vendas.
+- Geração de relatórios com base nos dados cadastrados.
+- Navegação intuitiva por meio de dropdowns na interface.
 
-Contribuição
+## Contribuição
 
 Este projeto foi desenvolvido com o objetivo de demonstrar habilidades e conhecimentos relevantes para um estágio na Ápice Sistemas. Se você deseja contribuir ou tem alguma dúvida específica sobre o projeto, sinta-se à vontade para entrar em contato.
 Contato
 
-Para mais informações ou dúvidas, entre em contato com o desenvolvedor:
+Para mais informações ou dúvidas, entre em contato comigo:
 
-Nome: Seu Nome
-Email: seu.email@example.com
+<div style"display: inline_block">
+    <a href="mailto:mastrakoski@gmail.com"><img
+            src="https://img.shields.io/badge/-Gmail-%23333?style=for-the-badge&logo=gmail&logoColor=white"
+            target="_blank"></a>
+    <a href="https://www.linkedin.com/in/mateus-rakoski/" target="_blank"><img
+            src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white"
+            target="_blank"></a>
+</div>
 
-Obrigado por avaliar este projeto! Esperamos que ele atenda às suas expectativas.
+### Obrigado por avaliar este projeto! Esperamos que ele atenda às suas expectativas.
