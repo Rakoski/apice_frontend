@@ -6,6 +6,7 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ListaDeProdutosPraMostrarNaVenda.css';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import EditarModal from "../EditarModal";
 
 const pessoasData = [
     {
@@ -53,10 +54,10 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
             if (response.ok) {
                 handleCloseModal();
             } else {
-                console.error('Failed to update data');
+                console.error('Falha em fazer update dos dados');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Erro: ', error);
         }
     };
 
@@ -101,8 +102,17 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
                                     onClick={() => handleOpenModal(pessoa.id_venda)}
                                     className="edit-button"
                                 >
+
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
+                            {showModal && (
+                                <EditarModal
+                                    showModal={showModal}
+                                    handleCloseModal={handleCloseModal}
+                                    editedData={editedData}
+                                    handleSaveChanges={handleSaveChanges}
+                                    handleInputChange={handleInputChange}
+                                />)}
                                 <Button
                                     variant="danger"
                                     onClick={() => onDeletar(pessoa.id_venda)}
@@ -116,59 +126,10 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
                     </tbody>
                 </Table>
             </div>
-
             <div className="total-container">
                 <span className="total-label">Total:</span>
                 <span className="total-value">{calculateTotal()}</span>
             </div>
-
-
-            <Modal show={showModal} onHide={handleCloseModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Editar Pessoa</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>
-                        <label>ID:</label>
-                        <input
-                            type="text"
-                            name="id_venda"
-                            value={editedData.id_venda || ''}
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                    <p></p>
-                    <div>
-                        <label>Nome:</label>
-                        <p></p>
-                        <input
-                            type="text"
-                            name="Pessoa"
-                            value={editedData.Pessoa || ''}
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                    <p></p>
-                    <div>
-                        <label>Total Venda:</label>
-                        <p></p>
-                        <input
-                            type="text"
-                            name="Total_venda"
-                            value={editedData.Total_venda || ''}
-                            onChange={handleInputChange}
-                        />
-                    </div>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseModal}>
-                        Fechar
-                    </Button>
-                    <Button variant="primary" onClick={handleSaveChanges}>
-                        Salvar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
 };

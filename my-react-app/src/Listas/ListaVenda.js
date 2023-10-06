@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -7,51 +7,47 @@ import './ListaDePessoas.css';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const pessoasData = [
-    {
-        id_venda: 1,
-        Pessoa: 'João Dos Santos',
-        Total_venda: 865,
-    },
-    {
-        id_venda: 2,
-        Pessoa: 'Joana Lurdes',
-        Total_venda: 790,
-    },
-    {
-        id_venda: 2,
-        Pessoa: 'Joana Lurdes',
-        Total_venda: 790,
-    },
-    {
-        id_venda: 2,
-        Pessoa: 'Joana Lurdes',
-        Total_venda: 790,
-    },
-    {
-        id_venda: 2,
-        Pessoa: 'Joana Lurdes',
-        Total_venda: 790,
-    },
-    {
-        id_venda: 2,
-        Pessoa: 'Joana Lurdes',
-        Total_venda: 790,
-    },
-    {
-        id_venda: 2,
-        Pessoa: 'Joana Lurdes',
-        Total_venda: 790,
-    },
-];
-
-const ListaVendas = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+const ListaVendas = ({}) => {
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState({});
-    const [editedData, setEditedData] = useState({}); // State for edited data
+    const [editedData, setEditedData] = useState({});
+    const [vendasData, setVendasData] = useState([]);
+    const [pessoaNomeMap, setPessoaNomeMap] = useState({});
+
+    // a primeira pessoa vai ficar setada pra sempre ser o neymar camisa 11 próximo melhor do mundo
+    const [selectedPessoa, setSelectedPessoa] = useState('11');
+
+    useEffect(() => {
+        const fetchVendasData = async () => {
+            try {
+                const responseVendas = await fetch('http://localhost:8080/api/vendas');
+                const responsePessoas = await fetch('http://localhost:8080/api/pessoas');
+
+                if (responseVendas.ok && responsePessoas.ok) {
+                    const vendasData = await responseVendas.json();
+                    const pessoasData = await responsePessoas.json();
+
+                    const vendasArray = vendasData.data || [];
+                    setVendasData(vendasArray);
+
+                    const pessoaNomeMapping = {};
+                    for (let pessoa of pessoasData) {
+                        pessoaNomeMapping[pessoa.id_pessoa] = pessoa.pessoa_nome;
+                    }
+                    setPessoaNomeMap(pessoaNomeMapping);
+                } else {
+                    console.error('Falha em pegar dados das vendas');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        };
+
+        fetchVendasData();
+    }, []);
 
     const handleOpenModal = (id) => {
-        const dataToDisplay = pessoasData.find((p) => p.id_venda === id);
+        const dataToDisplay = vendasData.find((venda) => venda.id_venda === id);
         setModalData(dataToDisplay);
         setEditedData(dataToDisplay);
         setShowModal(true);
@@ -61,25 +57,47 @@ const ListaVendas = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
         setShowModal(false);
     };
 
+    const handleDeleteVenda = async (id_venda) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/vendas/${id_venda}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok || response.status === 404) {
+                handleCloseModal();
+                window.location.reload();
+            } else {
+                console.error('Falha em deletar a venda');
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+        }
+    };
+
     const handleSaveChanges = async () => {
         try {
-            const response = await fetch('your-api-endpoint', {
+            const response = await fetch(`http://localhost:8080/api/vendas/${editedData.id_venda}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(editedData),
+                body: JSON.stringify({
+                    pessoa_id: selectedPessoa,
+                    valor_venda: editedData.valor_venda,
+                }),
             });
+            console.log(selectedPessoa, editedData.valor_venda)
 
             if (response.ok) {
                 handleCloseModal();
+                window.location.reload();
             } else {
-                console.error('Failed to update data');
+                console.error('Falha em fazer o update dos dados da venda');
             }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Erro:', error);
         }
-        handleCloseModal()
+        handleCloseModal();
     };
 
     const handleInputChange = (e) => {
@@ -103,22 +121,22 @@ const ListaVendas = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {pessoasData.map((pessoa) => (
-                        <tr key={pessoa.id_venda}>
-                            <td>{pessoa.id_venda}</td>
-                            <td>{pessoa.Pessoa}</td>
-                            <td>{pessoa.Total_venda}</td>
+                    {vendasData.map((venda) => (
+                        <tr key={venda.id_venda}>
+                            <td>{venda.id_venda}</td>
+                            <td>{pessoaNomeMap[venda.pessoa_id]}</td>
+                            <td>{venda.valor_venda}</td>
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
-                                    onClick={() => handleOpenModal(pessoa.id_venda)}
+                                    onClick={() => handleOpenModal(venda.id_venda)}
                                     className="edit-button"
                                 >
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
                                 <Button
                                     variant="danger"
-                                    onClick={() => onDeletar(pessoa.id_venda)}
+                                    onClick={() => handleDeleteVenda(venda.id_venda)}
                                     className="delete-button"
                                 >
                                     <FaTrash className="fa-trash" /> Deletar
@@ -135,11 +153,12 @@ const ListaVendas = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
 
             <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Editar Pessoa</Modal.Title>
+                    <Modal.Title>Editar</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <div>
                         <label>ID:</label>
+                        <p></p>
                         <input
                             type="text"
                             name="id_venda"
@@ -147,25 +166,28 @@ const ListaVendas = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
                             onChange={handleInputChange}
                         />
                     </div>
-                    <p></p>
                     <div>
-                        <label>Nome:</label>
+                        <label>Pessoa:</label>
                         <p></p>
-                        <input
-                            type="text"
-                            name="Pessoa"
-                            value={editedData.Pessoa || ''}
-                            onChange={handleInputChange}
-                        />
+                        <select
+                            name="pessoa_id"
+                            value={selectedPessoa}
+                            onChange={(e) => setSelectedPessoa(e.target.value)}
+                        >
+                            {Object.keys(pessoaNomeMap).map((pessoaId) => (
+                                <option key={pessoaId} value={pessoaId}>
+                                    {pessoaNomeMap[pessoaId]}
+                                </option>
+                            ))}
+                        </select>
                     </div>
-                    <p></p>
                     <div>
                         <label>Total Venda:</label>
                         <p></p>
                         <input
                             type="text"
-                            name="Total_venda"
-                            value={editedData.Total_venda || ''}
+                            name="valor_venda"
+                            value={editedData.valor_venda || ''}
                             onChange={handleInputChange}
                         />
                     </div>
