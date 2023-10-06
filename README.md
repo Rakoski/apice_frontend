@@ -18,7 +18,7 @@ O projeto é uma aplicação de gerenciamento de informações relacionadas a ba
 
 ## Navegue para o diretório do projeto:
 
-<code>cd src<code>
+<code>cd src</code>
 
 2. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
 
