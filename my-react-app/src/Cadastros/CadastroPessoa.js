@@ -11,7 +11,6 @@ const CadastroPessoa = () => {
     const [cidade, setCidade] = useState('16');
     const [bairro, setBairro] = useState('1');
 
-
     const [cep, setCep] = useState('');
     const [endereco, setEndereco] = useState('');
     const [numero, setNumero] = useState('');
@@ -21,6 +20,20 @@ const CadastroPessoa = () => {
     const [cidadesData, setCidadesData] = useState([]);
     const [bairrosData, setBairrosData] = useState([]);
 
+    const isTelefoneValido = (telefone) => {
+        const formatoValido = /^\+(?:\d{2} )?\(\d{2}\) \d{5}-\d{4}$|^\(\d{2}\) \d{5}-\d{4}$/;
+        return formatoValido.test(telefone);
+    };
+
+    const isCepValido = (cep) => {
+        const formatoValido = /^\d{5}-\d{3}$/;
+        return formatoValido.test(cep);
+    };
+
+    const isEmailValido = (email) => {
+        const formatoValido = /\S+@\S+\.\S+/;
+        return formatoValido.test(email);
+    };
 
     // primeiro vou pegar os bairros e as cidades pra mostrarem os registrados no dropdown,
     // caso contrário precisa registrar eles primeiro, daí só depois que a gente consegue mandar a requisição POST
@@ -46,6 +59,21 @@ const CadastroPessoa = () => {
 
 
     const handleConfirmar = async () => {
+        if (!isTelefoneValido(telefone)) {
+            alert('Telefone inválido. Use o formato +xx (xx) xxxxx-xxxx ou (xx) xxxxx-xxxx.');
+            return;
+        }
+
+        if (!isCepValido(cep)) {
+            alert('CEP inválido. Use o formato xxxxx-xxx.');
+            return;
+        }
+
+        if (!isEmailValido(email)) {
+            alert('Email inválido. Certifique-se de que o email realmente existe.');
+            return;
+        }
+
         try {
             const formData = {
                 id_pessoa: codigo,
