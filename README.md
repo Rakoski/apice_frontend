@@ -14,11 +14,11 @@ O projeto é uma aplicação de gerenciamento de informações relacionadas a ba
 
 1. Clone este repositório em sua máquina local:
 
-    <code>git clone https://github.com/seu-usuario/apice-sistemas-estagio.git</code>
+<code>git clone https://github.com/seu-usuario/apice-sistemas-estagio.git</code>
 
 ## Navegue para o diretório do projeto:
 
- <code>cd src<code>
+<code>cd src<code>
 
 2. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
 
