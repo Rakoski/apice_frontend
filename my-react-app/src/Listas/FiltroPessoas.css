@@ -24,8 +24,8 @@
 
 /* Estilo para o botão de filtro */
 .filter-container button {
-    padding: 10px 20px; /* Increase padding for height and width */
-    background-color: #007bff; /* Azul */
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 3px;
@@ -63,3 +63,13 @@
 .table tbody tr:nth-child(even) {
     background-color: #ffffff; /* Branco */
 }
+
+.dropdown-label {
+    margin: 10px;
+}
+
+.dropdown select {
+    background-color: white;
+    color: rgba(80, 80, 80, 0.94);
+}
+

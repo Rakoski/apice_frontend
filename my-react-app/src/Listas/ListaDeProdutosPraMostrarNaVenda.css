@@ -68,7 +68,7 @@
 
 .total-container {
     display: flex;
-    justify-content: flex-end; /* Align the total to the right */
+    justify-content: flex-end;
     margin-top: 10px;
     font-weight: bold;
 }
@@ -78,5 +78,15 @@
 }
 
 .total-value {
-    color: #007bff; /* Blue color for the total value */
+    color: #007bff;
 }
+
+.button-container {
+    margin: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+
+

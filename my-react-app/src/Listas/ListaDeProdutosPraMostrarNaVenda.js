@@ -1,37 +1,19 @@
 import React, { useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ListaDeProdutosPraMostrarNaVenda.css';
-import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import EditarModal from "../EditarModal";
 
-const pessoasData = [
-    {
-        id_produto: 2,
-        produto_nome: 'Mousepad',
-        quantidade_venda: 1,
-        valor_unitario: 1,
-    },
-    {
-        id_produto: 1,
-        produto_nome: 'Garrafa Stanley',
-        quantidade_venda: 2,
-        valor_unitario: 5,
-    },
-];
 
-const calculateSubTotal = (quantidade, valorUnitario) => quantidade * valorUnitario;
-
-const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+const ListaDeProdutosPraVenda = ({ selectedProducts, pessoa, onDeletar }) => {
     const [showModal, setShowModal] = useState(false);
     const [modalData, setModalData] = useState({});
     const [editedData, setEditedData] = useState({});
 
     const handleOpenModal = (id) => {
-        const dataToDisplay = pessoasData.find((p) => p.id_produto === id);
+        const dataToDisplay = pessoa.find((p) => p.id_produto === id);
         setModalData(dataToDisplay);
         setEditedData(dataToDisplay);
         setShowModal(true);
@@ -39,6 +21,13 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
 
     const handleCloseModal = () => {
         setShowModal(false);
+    };
+
+
+    const handleConfirmar = async () => {
+    };
+
+    const handleCancelar = async () => {
     };
 
     const handleSaveChanges = async () => {
@@ -70,8 +59,7 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
     };
 
     const calculateTotal = () => {
-        return pessoasData.reduce((total, pessoa) => total +
-            calculateSubTotal(pessoa.quantidade_venda, pessoa.valor_unitario), 0);
+        return selectedProducts.reduce((total, produto) => total + produto.subTotal, 0);
     };
 
     return (
@@ -82,27 +70,26 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
                     <tr>
                         <th>Código</th>
                         <th>Nome</th>
-                        <th>Total Venda</th>
                         <th>Quantidade</th>
+                        <th>Valor Unitário</th>
                         <th>Sub Total</th>
                         <th>Ações</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {pessoasData.map((pessoa) => (
-                        <tr key={pessoa.id_produto}>
-                            <td>{pessoa.id_produto}</td>
-                            <td>{pessoa.produto_nome}</td>
-                            <td>{pessoa.quantidade_venda}</td>
-                            <td>{pessoa.valor_unitario}</td>
-                            <td>{calculateSubTotal(pessoa.quantidade_venda, pessoa.valor_unitario)}</td>
+                    {selectedProducts.map((produto) => (
+                        <tr key={produto.id_venda}>
+                            <td>{produto.id_produto}</td>
+                            <td>{produto.produto}</td>
+                            <td>{produto.quantidadeVenda}</td>
+                            <td>{produto.valorUnitario}</td>
+                            <td>{produto.subTotal}</td>
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
-                                    onClick={() => handleOpenModal(pessoa.id_venda)}
+                                    onClick={() => handleOpenModal(produto.id_venda)}
                                     className="edit-button"
                                 >
-
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
                             {showModal && (
@@ -128,8 +115,25 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
             </div>
             <div className="total-container">
                 <span className="total-label">Total:</span>
-                <span className="total-value">{calculateTotal()}</span>
+                <span className="total-value">{`R$ ${calculateTotal().toFixed(2)}`}</span>
             </div>
+            <div className="button-container">
+                <button
+                    style={{ backgroundColor: 'green', color: 'white', padding: '20px 50px' }}
+                    onClick={handleConfirmar}
+                    className="edit-button"
+                >
+                    Confirmar
+                </button>
+                <button
+                    style={{ backgroundColor: 'red', color: 'white', padding: '20px 50px' }}
+                    onClick={handleCancelar}
+                    className="delete-button"
+                >
+                    Cancelar
+                </button>
+            </div>
+
         </div>
     );
 };

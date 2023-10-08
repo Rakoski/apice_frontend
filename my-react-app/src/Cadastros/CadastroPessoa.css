@@ -20,7 +20,7 @@
     justify-content: center;
 }
 
-/* Adjust the width of form groups */
+/* Grupos de formulários (form groups) e seus tamanhos */
 .cadastro-pessoa-container .form-group {
     width: 48%;
 }
@@ -37,7 +37,7 @@
     font-size: 22px;
 }
 
-/* Styles for the buttons (Cancelar and Confirmar) */
+/* Estilos para os botoões (Cancelar and Confirmar) */
 .cadastro-pessoa-container .button-container {
     margin: 30px;
     margin-left: 150px;
@@ -68,7 +68,7 @@
     color: white;
 }
 
-/* Styles for labels */
+/* estilos para as labels */
 .cadastro-pessoa-container label {
     display: inline-block;
     margin-right: 10px;
