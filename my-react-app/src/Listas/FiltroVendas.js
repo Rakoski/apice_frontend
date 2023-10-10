@@ -68,7 +68,7 @@ const FiltroVendas = () => {
 
                 <div className="dropdown">
                     <label className="dropdown-label">Pessoa:</label>
-                    <select
+                    <select className="venda-input"
                         value={selectedPessoa}
                         onChange={(e) => setSelectedPessoa(e.target.value)}
                     >
@@ -82,7 +82,7 @@ const FiltroVendas = () => {
 
                 <div className="dropdown">
                     <label className="dropdown-label">Produto:</label>
-                    <select
+                    <select className="venda-input"
                         value={selectedProduto}
                         onChange={(e) => setSelectedProduto(e.target.value)}
                     >

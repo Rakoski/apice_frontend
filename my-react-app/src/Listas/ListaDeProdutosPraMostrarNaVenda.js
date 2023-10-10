@@ -1,65 +1,101 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ListaDeProdutosPraMostrarNaVenda.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import EditarModal from "../EditarModal";
+import EditarModal from '../EditarModal';
 
-
-const ListaDeProdutosPraVenda = ({ selectedProducts, pessoa, onDeletar }) => {
+const ListaDeProdutosPraVenda = ({
+ selectedProducts,
+ updateSelectedProducts,
+ onDeletar,
+ fields,
+ includeValorFields,
+ updateSubTotal
+ }) => {
     const [showModal, setShowModal] = useState(false);
-    const [modalData, setModalData] = useState({});
     const [editedData, setEditedData] = useState({});
+    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [produtos, setProdutos] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/produtos')
+            .then((response) => response.json())
+            .then((data) => {
+                setProdutos(data.data);
+            });
+    }, []);
 
     const handleOpenModal = (id) => {
-        const dataToDisplay = pessoa.find((p) => p.id_produto === id);
-        setModalData(dataToDisplay);
-        setEditedData(dataToDisplay);
-        setShowModal(true);
+        const productToEdit = selectedProducts.find((produto) => produto.id_venda === id);
+
+        if (productToEdit) {
+            setEditedData({ ...productToEdit });
+            setSelectedProductId(id);
+            setShowModal(true);
+        }
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
+        setSelectedProductId(null);
+        setEditedData({});
     };
 
+    const handleSaveChanges = () => {
+        const updatedProducts = [...selectedProducts];
 
-    const handleConfirmar = async () => {
-    };
+        const productIndex = updatedProducts.findIndex((produto) => produto.id_venda === selectedProductId);
 
-    const handleCancelar = async () => {
-    };
-
-    const handleSaveChanges = async () => {
-        try {
-            const response = await fetch('your-api-endpoint', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(editedData),
-            });
-
-            if (response.ok) {
-                handleCloseModal();
-            } else {
-                console.error('Falha em fazer update dos dados');
-            }
-        } catch (error) {
-            console.error('Erro: ', error);
+        if (productIndex !== -1) {
+            updatedProducts[productIndex] = editedData;
+            updateSelectedProducts(updatedProducts);
+            handleCloseModal();
         }
     };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setEditedData({
-            ...editedData,
-            [name]: value,
-        });
+    const calculateSubTotalForItem = (produto) => {
+        const quantidadeVenda = parseInt(produto.quantidadeVenda, 10) || 0;
+        const valorUnitario = parseFloat(produto.valorUnitario);
+        return quantidadeVenda * valorUnitario;
     };
 
+    const handleInputChange = (fieldName, value) => {
+        if (fieldName === 'produto') {
+            const selectedProduto = produtos.find((produto) => produto.nome_produto === value);
+
+            if (selectedProduto) {
+                setEditedData((prevData) => ({
+                    ...prevData,
+                    produto: selectedProduto.nome_produto,
+                }));
+
+                const quantidadeVenda = parseInt(editedData.quantidadeVenda, 10) || 0;
+                const valorUnitario = parseFloat(selectedProduto.valor_produto);
+
+                const subTotal = valorUnitario * quantidadeVenda;
+                updateSubTotal(subTotal);
+            }
+        } else {
+            setEditedData((prevData) => ({
+                ...prevData,
+                [fieldName]: value,
+            }));
+        }
+    };
+
+
+    useEffect(() => {
+        const newTotal = selectedProducts.reduce((total, produto) => {
+            return total + calculateSubTotalForItem(produto);
+        }, 0);
+
+        updateSubTotal(newTotal);
+    }, [selectedProducts]);
+
     const calculateTotal = () => {
-        return selectedProducts.reduce((total, produto) => total + produto.subTotal, 0);
+        return selectedProducts.reduce((total, produto) => total + parseFloat(produto.subTotal), 0);
     };
 
     return (
@@ -68,22 +104,18 @@ const ListaDeProdutosPraVenda = ({ selectedProducts, pessoa, onDeletar }) => {
                 <Table striped bordered hover className="table">
                     <thead>
                     <tr>
-                        <th>Código</th>
-                        <th>Nome</th>
-                        <th>Quantidade</th>
-                        <th>Valor Unitário</th>
-                        <th>Sub Total</th>
+                        {fields.map((field) => (
+                            <th key={field.name}>{field.label}</th>
+                        ))}
                         <th>Ações</th>
                     </tr>
                     </thead>
                     <tbody>
                     {selectedProducts.map((produto) => (
                         <tr key={produto.id_venda}>
-                            <td>{produto.id_produto}</td>
-                            <td>{produto.produto}</td>
-                            <td>{produto.quantidadeVenda}</td>
-                            <td>{produto.valorUnitario}</td>
-                            <td>{produto.subTotal}</td>
+                            {fields.map((field) => (
+                                <td key={field.name}>{produto[field.name]}</td>
+                            ))}
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
@@ -92,17 +124,9 @@ const ListaDeProdutosPraVenda = ({ selectedProducts, pessoa, onDeletar }) => {
                                 >
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
-                            {showModal && (
-                                <EditarModal
-                                    showModal={showModal}
-                                    handleCloseModal={handleCloseModal}
-                                    editedData={editedData}
-                                    handleSaveChanges={handleSaveChanges}
-                                    handleInputChange={handleInputChange}
-                                />)}
                                 <Button
                                     variant="danger"
-                                    onClick={() => onDeletar(pessoa.id_venda)}
+                                    onClick={() => onDeletar(produto.id_venda)}
                                     className="delete-button"
                                 >
                                     <FaTrash className="fa-trash" /> Deletar
@@ -117,23 +141,18 @@ const ListaDeProdutosPraVenda = ({ selectedProducts, pessoa, onDeletar }) => {
                 <span className="total-label">Total:</span>
                 <span className="total-value">{`R$ ${calculateTotal().toFixed(2)}`}</span>
             </div>
-            <div className="button-container">
-                <button
-                    style={{ backgroundColor: 'green', color: 'white', padding: '20px 50px' }}
-                    onClick={handleConfirmar}
-                    className="edit-button"
-                >
-                    Confirmar
-                </button>
-                <button
-                    style={{ backgroundColor: 'red', color: 'white', padding: '20px 50px' }}
-                    onClick={handleCancelar}
-                    className="delete-button"
-                >
-                    Cancelar
-                </button>
-            </div>
-
+            {showModal && (
+                <EditarModal
+                    showModal={showModal}
+                    handleCloseModal={handleCloseModal}
+                    editedData={editedData}
+                    handleSaveChanges={handleSaveChanges}
+                    handleInputChange={handleInputChange}
+                    fields={fields}
+                    produtos={produtos}
+                    includeValorFields={includeValorFields}
+                />
+            )}
         </div>
     );
 };

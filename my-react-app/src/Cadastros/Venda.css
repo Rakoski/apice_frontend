@@ -1,4 +1,3 @@
-/* Estilos CSS atualizados para o componente VendaComponent */
 .venda-container {
     display: flex;
     flex-direction: column;
@@ -19,7 +18,7 @@
 }
 
 .venda-field {
-    flex-basis: calc(33.33% - 10px); /* 3 columns with spacing */
+    flex-basis: calc(33.33% - 10px);
 }
 
 .venda-label {

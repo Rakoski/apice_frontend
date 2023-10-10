@@ -3,24 +3,37 @@ import InputMask from 'react-input-mask';
 import './Venda.css'
 import ListaDeProdutosPraVenda from "../Listas/ListaDeProdutosPraMostrarNaVenda";
 
+const fields = [
+    { label: 'Código', name: 'id_produto' },
+    { label: 'Nome', name: 'produto' , isDropdown: true},
+    { label: 'Quantidade', name: 'quantidadeVenda' },
+    { label: 'Valor Unitário', name: 'valorUnitario' },
+    { label: 'Sub Total', name: 'subTotal' },
+];
 
 // vou fazer esse componente em OOP só pra aprender/testar como funciona isso no react
 class VendaComponent extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
+            includeValorFields: false,
             id_venda: '',
             dataVenda: '',
             produto: '',
             quantidadeVenda: '',
+            pessoa: '',
+            selectedPessoaId: '7',
             pessoas: [],
             produtos: [],
             valorUnitario: 0,
             subTotal: 0,
             carrinho: [],
             selectedProducts: [],
+            total: 0,
         };
-    }
+        this.updateSubTotal = this.updateSubTotal.bind(this);
+    };
 
     componentDidMount() {
         fetch('http://localhost:8080/api/pessoas')
@@ -38,31 +51,40 @@ class VendaComponent extends Component {
                         valorUnitario: parseFloat(produtoWithId10.valor_produto) });
                 }
             });
-    }
+    };
 
     handleIdVendaChange = (e) => {
         this.setState({ id_venda: e.target.value });
-    }
+    };
 
     handleDataVendaChange = (e) => {
-        this.setState({ dataVenda: e.target.value });
-    }
+        const rawDate = e.target.value;
+        const formattedDate = rawDate.replace(/-/g, '/');
+        this.setState({ dataVenda: formattedDate });
+    };
 
     handlePessoaChange = (e) => {
-        this.setState({ pessoa: e.target.value });
-    }
+        const selectedPessoaNome = e.target.value;
+        const selectedPessoaObj = this.state.pessoas.find((pessoa) => pessoa.pessoa_nome === selectedPessoaNome);
+
+        if (selectedPessoaObj) {
+            this.setState({ pessoa: selectedPessoaNome, selectedPessoaId: selectedPessoaObj.id_pessoa });
+        } else {
+            this.setState({ pessoa: '', selectedPessoaId: '' });
+            alert(`Selected pessoa "${selectedPessoaNome}" not found in pessoas list`);
+        }
+    };
 
     handleProdutoChange = (e) => {
         const produtoSelecionado = e.target.value;
-        const { produtos } = this.state;
+        const { produtos, quantidadeVenda } = this.state;
 
         const selectedProduto = produtos.find((produto) => produto.nome_produto === produtoSelecionado);
 
         if (selectedProduto) {
             const valorUnitario = parseFloat(selectedProduto.valor_produto);
-            this.setState({ produto: produtoSelecionado, valorUnitario }, () => {
-                this.calculateSubTotal();
-            });
+            this.setState({ produto: produtoSelecionado, valorUnitario });
+            this.calculateSubTotal(quantidadeVenda, valorUnitario);
         }
     };
 
@@ -72,21 +94,28 @@ class VendaComponent extends Component {
 
         if (!isNaN(newValue)) {
             const newQuantidadeVenda = newValue >= 0 ? newValue : 0;
-
-            this.setState({quantidadeVenda: newQuantidadeVenda}, () => {
-                this.calculateSubTotal();
-            });
-        };
+            this.setState({ quantidadeVenda: newQuantidadeVenda });
+            this.calculateSubTotal(newQuantidadeVenda, this.state.valorUnitario);
+        }
     };
 
-    calculateSubTotal() {
-        const { quantidadeVenda, valorUnitario } = this.state;
-        const subTotal = quantidadeVenda * valorUnitario;
-        this.setState({ subTotal });
+    updateSubTotal(newSubTotal) {
+        this.setState({ subTotal: newSubTotal });
+    };
+
+    calculateSubTotal(quantidade, valorUnit) {
+        const subTotalValue = parseFloat(quantidade) * valorUnit;
+        this.setState({ subTotal: subTotalValue });
     }
 
     handleAdicionarAoCarrinho = () => {
         const { id_venda, dataVenda, pessoa, produto, quantidadeVenda, subTotal, valorUnitario } = this.state;
+
+        if (quantidadeVenda <= 0) {
+            alert('Please enter a valid Quantidade Venda.');
+            return;
+        }
+
         const venda = {
             id_venda,
             id_produto: this.state.produtos.find((p) => p.nome_produto === produto)?.id_produto,
@@ -96,8 +125,11 @@ class VendaComponent extends Component {
             valorUnitario,
         };
 
+        const newTotal = this.state.total + subTotal;
+
         this.setState((prevState) => ({
             selectedProducts: [...prevState.selectedProducts, venda],
+            total: newTotal,
         }));
 
         this.setState({
@@ -109,10 +141,61 @@ class VendaComponent extends Component {
             valorUnitario: 0,
             subTotal: 0,
         });
-    }
+    };
+
+    sendVendaRequest = () => {
+        const { id_venda, selectedPessoaId, dataVenda, total } = this.state;
+
+        if (!selectedPessoaId) {
+            alert('Por favor, selecione uma pessoa válida.');
+            return;
+        }
+
+        if(!dataVenda) {
+            alert('Por favor, adicione uma data de venda.');
+            return;
+        }
+
+        const requestBody = {
+            pessoa_id: selectedPessoaId,
+            data_venda: dataVenda,
+            valor_venda: parseFloat(total),
+        };
+
+        if (id_venda) {
+            requestBody.id_venda = id_venda;
+        }
+
+        fetch('http://localhost:8080/api/vendas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestBody),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert('Venda criada com sucesso!');
+                    this.setState({
+                        pessoa: '',
+                        selectedPessoaId: '',
+                        total: 0,
+                    });
+                } else {
+                    alert('Falha em registrar a venda');
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+            });
+    };
+
+    updateSelectedProducts = (updatedProducts) => {
+        this.setState({ selectedProducts: updatedProducts });
+    };
 
     render() {
-        const { pessoas, produtos, valorUnitario, selectedProducts } = this.state;
+        const { pessoas, produtos, valorUnitario, includeValorFields } = this.state;
 
         return (
             <div className="venda-container">
@@ -180,7 +263,30 @@ class VendaComponent extends Component {
 
                     {/* esse é só o componente da lista. Ele vai funcionar como carrinho já que ia ficar
                      muita coisa pra colocar em um componente só */}
-                    <ListaDeProdutosPraVenda selectedProducts={selectedProducts} />
+                    <ListaDeProdutosPraVenda
+                        selectedProducts={this.state.selectedProducts}
+                        pessoa={pessoas}
+                        updateSelectedProducts={this.updateSelectedProducts}
+                        includeValorFields={includeValorFields}
+                        fields={fields}
+                        updateSubTotal={this.updateSubTotal}
+                    />
+
+                    <div className="button-container">
+                        <button
+                            style={{ backgroundColor: 'green', color: 'white', padding: '20px 50px' }}
+                            onClick={this.sendVendaRequest}
+                            className="edit-button"
+                        >
+                            Confirmar
+                        </button>
+                        <button
+                            style={{ backgroundColor: 'red', color: 'white', padding: '20px 50px' }}
+                            className="delete-button"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
                 </div>
             </div>
         );
