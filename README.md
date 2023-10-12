@@ -58,4 +58,4 @@ Para mais informações ou dúvidas, entre em contato comigo:
             target="_blank"></a>
 </div>
 
-### Obrigado por avaliar este projeto! Esperamos que ele atenda às suas expectativas.
+### Obrigado por avaliar este projeto! Espero que ele atenda às suas expectativas.
