@@ -17,6 +17,10 @@ import CadastroCidade from "./Cadastros/CadastroCidade";
 import ListaCidade from "./Listas/ListaCidade";
 import FiltroVendas from "./Listas/FiltroVendas";
 
+function Vendas() {
+    return null;
+}
+
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
     const [inputValue2, setInputValue2] = useState('Movimentos');

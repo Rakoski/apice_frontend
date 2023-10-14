@@ -2,7 +2,7 @@ import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-const EditarModal = ({ produtos, showModal, handleCloseModal, fields, editedData, handleSaveChanges, handleInputChange, brazilianStates }) => {
+const EditarModal = ({ produtos, showModal, handleCloseModal, fields, editedData, handleSaveChanges, handleInputChange }) => {
     return (
         <Modal show={showModal} onHide={handleCloseModal}>
             <Modal.Header closeButton>

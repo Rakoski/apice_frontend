@@ -12,7 +12,8 @@ const ListaDeProdutosPraVenda = ({
  onDeletar,
  fields,
  includeValorFields,
- updateSubTotal
+ updateSubTotal,
+ updateSubTotalAndValorUnitario
  }) => {
     const [showModal, setShowModal] = useState(false);
     const [editedData, setEditedData] = useState({});
@@ -76,6 +77,7 @@ const ListaDeProdutosPraVenda = ({
 
                 const subTotal = valorUnitario * quantidadeVenda;
                 updateSubTotal(subTotal);
+                updateSubTotalAndValorUnitario(subTotal, valorUnitario); // Call the callback here
             }
         } else {
             setEditedData((prevData) => ({
@@ -84,7 +86,6 @@ const ListaDeProdutosPraVenda = ({
             }));
         }
     };
-
 
     useEffect(() => {
         const newTotal = selectedProducts.reduce((total, produto) => {
