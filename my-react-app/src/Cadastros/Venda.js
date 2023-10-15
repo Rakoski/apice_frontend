@@ -16,8 +16,12 @@ const fields = [
     { label: 'Sub Total', name: 'subTotal' },
 ];
 
+// eu sei que esse componente ficou incrivelmente grande mas eu fiz ele desse jeito porque antes, com vários componentes
+// e cada um com +- 100 linhas, tava dando muitos conflitos de dados e de variáveis, principalmente na hora de editar
+// e na hora de cadastrar, com a função de calcular o total não sendo confiável, uma hora funcionando e outras não,
+// então peço desculpas pra pessoa que for ter que analizar esse componente
+
 function VendaComponent() {
-    const [includeValorFields, setIncludeValorFields] = useState(false);
     const [id_venda, setIdVenda] = useState('');
     const [dataVenda, setDataVenda] = useState('');
     const [produto, setProduto] = useState('Caderno 48 folhas tilibra');
@@ -32,7 +36,6 @@ function VendaComponent() {
     const [total, setTotal] = useState(0);
     const [showModal, setShowModal] = useState(false);
     const [editedData, setEditedData] = useState({});
-    const [subTotal2, setSubTotal2] = useState(0)
 
     const [isPressed, setIsPressed] = useState(false);
 
@@ -40,7 +43,7 @@ function VendaComponent() {
         backgroundColor: isPressed ? 'white' : 'green',
         color: isPressed ? 'green' : 'white',
         padding: '20px 50px',
-        transition: 'background-color 0.3s, color 0.3s', // Add a transition effect
+        transition: 'background-color 0.3s, color 0.3s',
     };
 
     useEffect(() => {
@@ -487,8 +490,8 @@ function VendaComponent() {
                         style={buttonStyle}
                         onClick={sendVendaRequest}
                         className="edit-button"
-                        onMouseDown={() => setIsPressed(true)} // Set the active state when pressed
-                        onMouseUp={() => setIsPressed(false)}   // Reset the active state when released
+                        onMouseDown={() => setIsPressed(true)}
+                        onMouseUp={() => setIsPressed(false)}
                     >
                         Confirmar
                     </button>
