@@ -23,15 +23,17 @@ O projeto é uma aplicação de gerenciamento de informações relacionadas a ba
 
 2. Navegue para o diretório do projeto:
 
-<code>cd src</code>
+<code>cd my-react-app</code>
 
-3. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
+3. Instale as dependências do projeto com <code>npm install</code>
 
-4. inicie o servidor frontend:
+4. Configure o banco de dados MySQL com as credenciais apropriadas no outro repositório do backend [apice_sistema](https://github.com/Rakoski/apice_sistema)
+
+5. inicie o servidor frontend:
 
 <code>npm start</code>
 
-5. A aplicação estará disponível em http://localhost:3000.
+6. A aplicação estará disponível em http://localhost:3000 no seu navegador.
 
 ## Funcionalidades
 
