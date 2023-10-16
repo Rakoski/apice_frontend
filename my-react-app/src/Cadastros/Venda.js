@@ -35,8 +35,7 @@ function VendaComponent() {
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [total, setTotal] = useState(0);
     const [showModal, setShowModal] = useState(false);
-    const [editedData, setEditedData] = useState({});
-
+    const [editedData, setEditedData] = useState({ id_produto: null, produto: '', quantidadeVenda: 0, valorUnitario: 0, subTotal: 0 });
     const [isPressed, setIsPressed] = useState(false);
 
     const buttonStyle = {
@@ -145,17 +144,13 @@ function VendaComponent() {
             if (selectedProduto) {
                 const valorUnitario = parseFloat(selectedProduto.valor_produto);
                 const localSubTotal = calculateSubTotal(editedDataCopy.quantidadeVenda, valorUnitario);
-                const subTotalDaqui = calculateSubTotal(value, valorUnitario)
 
-                setEditedData({ ...editedDataCopy, valorUnitario, subTotalDaqui});
-
-                const newTotal = calculateTotal();
-                setTotal(newTotal);
-
+                editedDataCopy.valorUnitario = valorUnitario;
+                editedDataCopy.subTotal = localSubTotal;
             }
-        } else {
-            setEditedData(editedDataCopy);
         }
+
+        setEditedData(editedDataCopy);
     };
 
     const calculateTotal = () => {
@@ -172,7 +167,7 @@ function VendaComponent() {
         }, 0);
     };
 
-    const handleAdicionarAoCarrinho = () => {
+    const handleAddToCart = () => {
         if (quantidadeVenda <= 0) {
             alert('Por favor digite uma quantidade válida.');
             return;
@@ -207,8 +202,7 @@ function VendaComponent() {
         }
         return null;
     }
-
-
+    
     const sendVendaRequest = async () => {
         if (!selectedPessoaId) {
             alert('Por favor, selecione uma pessoa válida.');
@@ -223,8 +217,6 @@ function VendaComponent() {
         let total = parseFloat(calculateTotal().toFixed(2));
 
         const dataVendaFormatada = convertToISODate(dataVenda)
-
-        console.log(dataVendaFormatada, dataVenda)
 
         const requestBody = {
             pessoa_id: selectedPessoaId,
@@ -269,8 +261,7 @@ function VendaComponent() {
             console.error('Erro:', error);
         }
     };
-
-
+    
     const registerVendasProdutos = async (vendaId) => {
         if (!selectedProducts || selectedProducts.length === 0) {
             alert('Por favor coloque produtos antes de registra-los.');
@@ -303,8 +294,8 @@ function VendaComponent() {
         }
     };
 
-    const handleOpenModal = (id) => {
-        const productToEdit = selectedProducts.find((produto) => produto.id_venda === id);
+    const handleOpenModal = (index) => {
+        const productToEdit = selectedProducts[index];
 
         if (productToEdit) {
             setEditedData({ ...productToEdit });
@@ -313,13 +304,15 @@ function VendaComponent() {
     };
 
     const handleSaveChanges = () => {
-        const updatedProducts = [...selectedProducts];
-        const productIndex = updatedProducts.findIndex((produto) => produto.id_venda === editedData.id_venda);
+        if (editedData.id_produto !== null) {
+            const updatedProducts = [...selectedProducts];
+            const productIndex = updatedProducts.findIndex((produto) => produto.id_produto === editedData.id_produto);
 
-        if (productIndex !== -1) {
-            updatedProducts[productIndex] = editedData;
-            updateSelectedProducts(updatedProducts);
-            handleCloseModal();
+            if (productIndex !== -1) {
+                updatedProducts[productIndex] = editedData;
+                updateSelectedProducts(updatedProducts);
+                handleCloseModal();
+            }
         }
     };
 
@@ -390,7 +383,7 @@ function VendaComponent() {
                     <label className="venda-value">{`:  R$${subTotal}`}</label>
                 </div>
                 <div className="venda-field">
-                    <button className="venda-button" onClick={handleAdicionarAoCarrinho}>
+                    <button className="venda-button" onClick={handleAddToCart}>
                         <img
                             src={process.env.PUBLIC_URL + '/carrinho-png.png'}
                             alt="Carrinho"
@@ -412,7 +405,7 @@ function VendaComponent() {
                             </tr>
                             </thead>
                             <tbody>
-                            {selectedProducts.map((produto) => {
+                            {selectedProducts.map((produto, index) => {
                                 const { id_produto, produto: nome_produto, quantidadeVenda, valorUnitario: valor_produto } = produto;
                                 const subTotal2 = quantidadeVenda * valor_produto;
 
@@ -426,7 +419,7 @@ function VendaComponent() {
                                         <td className="actions-column">
                                             <Button
                                                 variant="warning"
-                                                onClick={() => handleOpenModal(produto.id_venda)}
+                                                onClick={() => handleOpenModal(index)}
                                                 className="edit-button"
                                             >
                                                 <FaEdit className="fa-edit" /> Editar

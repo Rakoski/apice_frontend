@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import { FaSearch } from 'react-icons/fa';
 import './FiltroPessoas.css';
 import InputMask from "react-input-mask";
-import { format } from 'date-fns';
+import {addDays, format} from 'date-fns';
 
 const FiltroVendas = () => {
     const [vendasData, setVendasData] = useState([]);
@@ -193,7 +193,7 @@ const FiltroVendas = () => {
                                 <td>{venda.id_venda}</td>
                                 <td>{venda.pessoa_nome}</td>
                                 <td>{venda.valor_venda}</td>
-                                <td>{format(new Date(venda.data_venda), 'dd/MM/yyyy')}</td>
+                                <td>{format(addDays(new Date(venda.data_venda), 1), 'dd/MM/yyyy')}</td>
                             </tr>
                         ))}
                         </tbody>
