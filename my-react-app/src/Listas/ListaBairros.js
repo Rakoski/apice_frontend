@@ -89,12 +89,11 @@ const ListaDeBairros = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(deleteData), // Send the delete flag in the request body
+                body: JSON.stringify(deleteData),
             });
 
             if (response.ok) {
-                // Handle successful deletion
-                window.location.reload(); // Reload the page
+                window.location.reload();
             } else {
                 console.error('Failed to delete neighborhood');
             }

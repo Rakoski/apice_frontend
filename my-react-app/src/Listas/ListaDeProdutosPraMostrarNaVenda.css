@@ -10,30 +10,26 @@
     margin-left: 30px; margin-right: 30px; margin-top: 30px;
 }
 
-/* Style for the table headers */
 .table thead th {
-    background-color: #808080; /* Gray */
+    background-color: #808080; /* vulgo cinza */
     color: white;
     text-align: left;
-    padding: 30px 100px; /* Increase padding for spacing */
+    padding: 30px 105px;
 }
 
-/* Style for the table rows */
 .table tbody td {
-    padding: 30px 12px; /* Increase padding for spacing */
+    padding: 30px 12px;
     border: 1px solid #ccc;
 }
 
-/* Style for the "Ações" column */
 .actions-column {
     display: flex;
-    gap: 20px; /* Increase gap for spacing */
+    gap: 20px;
 }
 
-/* Style for the Edit and Delete buttons */
 .edit-button,
 .delete-button {
-    padding: 20px 50px; /* Increase padding for spacing */
+    padding: 20px 50px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
@@ -42,7 +38,7 @@
 }
 
 .edit-button {
-    background-color: green; /* Green */
+    background-color: green;
     color: white;
 }
 
@@ -51,7 +47,7 @@
     color: white;
 }
 
-/* Style for the "Voltar para Cadastro" and "Incluir" buttons */
+/* voltar pro cadastro e botão de incluir */
 .link-button,
 .button-incluir {
     background-color: #808080; /* Gray */
@@ -68,7 +64,7 @@
 
 .total-container {
     display: flex;
-    justify-content: flex-end; /* Align the total to the right */
+    justify-content: flex-end;
     margin-top: 10px;
     font-weight: bold;
 }
@@ -78,5 +74,15 @@
 }
 
 .total-value {
-    color: #007bff; /* Blue color for the total value */
+    color: #007bff;
 }
+
+.button-container {
+    margin: 30px;
+    display: flex;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+
+

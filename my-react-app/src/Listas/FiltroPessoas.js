@@ -54,8 +54,6 @@ const FiltroPessoas = () => {
         }
     }
 
-
-
     const fetchBairroData = async (bairroNome) => {
         try {
             const response = await fetch(`http://localhost:8080/api/bairros/nome/${bairroNome}`);
@@ -154,7 +152,6 @@ const FiltroPessoas = () => {
 
             setResultados(filteredPessoas);
         };
-
         filterData();
     }, [filtroNome, filtroCidade, filtroBairro, pessoasData]);
 

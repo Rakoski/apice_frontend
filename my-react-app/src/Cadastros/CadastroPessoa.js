@@ -7,7 +7,7 @@ const CadastroPessoa = () => {
     const [nome, setNome] = useState('');
 
     // vou deixar os 2 aqui como 16 e 1 pois 16 seria "Jardins" e 1 seria "Ipanema" aka os bairros selecionados
-    // no começo se o usuário não selecionar nenhum outro
+    // no começo se o usuário não selecionar nenhum outro pra evitar que uma requisição seja mandada sem nada
     const [cidade, setCidade] = useState('16');
     const [bairro, setBairro] = useState('1');
 
@@ -21,16 +21,22 @@ const CadastroPessoa = () => {
     const [bairrosData, setBairrosData] = useState([]);
 
     const isTelefoneValido = (telefone) => {
+
+        // isso aqui diz que tem q ser assim: +xx (xx) xxxxx-xxxx ou assim: (xx) xxxxx-xxxx
         const formatoValido = /^\+(?:\d{2} )?\(\d{2}\) \d{5}-\d{4}$|^\(\d{2}\) \d{5}-\d{4}$/;
         return formatoValido.test(telefone);
     };
 
     const isCepValido = (cep) => {
+
+        // isso aqui diz que tem q ser assim: xxxxx-xxx
         const formatoValido = /^\d{5}-\d{3}$/;
         return formatoValido.test(cep);
     };
 
     const isEmailValido = (email) => {
+
+        // já isso diz que o email tem que tem pelo menos um "@" e um "."
         const formatoValido = /\S+@\S+\.\S+/;
         return formatoValido.test(email);
     };

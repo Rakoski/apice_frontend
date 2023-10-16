@@ -1,4 +1,4 @@
-/* Estilo para o container principal ListaDePessoas */
+/* container principal ListaDePessoas */
 .list-container {
     display: flex;
     flex-direction: column;
@@ -6,26 +6,26 @@
     margin: 30px;
 }
 
-/* Estilo para o container de filtros */
+/* container de filtros */
 .filter-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
-/* Estilo para os campos de entrada de filtro */
 .filter-container input {
-    margin: 0 10px;
-    padding: 10px; /* Increase padding for height */
+    margin-top: 20px;
+    margin-right: 10px;
+    padding:  10px 20px;
     border: 1px solid #ccc;
     border-radius: 3px;
 }
 
-/* Estilo para o botão de filtro */
+/* filtro */
 .filter-container button {
-    padding: 10px 20px; /* Increase padding for height and width */
-    background-color: #007bff; /* Azul */
+    padding: 10px 20px;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 3px;
@@ -34,32 +34,74 @@
 }
 
 
-/* Estilo para a tabela de resultados */
+/* estilos para a tabela de resultados */
 .table {
-    width: 80%; /* Ajuste a largura da tabela conforme necessário */
+    width: 80%;
     margin: 0 auto;
     border: 1px solid #ccc;
 }
 
-/* Estilo para as células da tabela */
 .table td,
 .table th {
     padding: 10px;
     text-align: center;
 }
 
-/* Estilo para as células do cabeçalho da tabela */
+.data-input {
+    width: 100%;
+    padding: 05px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* dropdowns */
+.dropdown-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+.dropdown-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+/* campos de input sem ser dropdowns */
 .table th {
-    background-color: #808080; /* Cinza */
+    background-color: #808080; /* cinza */
     color: white;
 }
 
-/* Estilo para as linhas ímpares da tabela */
 .table tbody tr:nth-child(odd) {
-    background-color: #f2f2f2; /* Cinza claro */
+    background-color: #f2f2f2;
 }
 
-/* Estilo para as linhas pares da tabela */
 .table tbody tr:nth-child(even) {
-    background-color: #ffffff; /* Branco */
+    background-color: #ffffff;
 }
+
+.venda-label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.venda-input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.dropdown select {
+    background-color: white;
+    color: rgba(80, 80, 80, 0.94);
+}
+

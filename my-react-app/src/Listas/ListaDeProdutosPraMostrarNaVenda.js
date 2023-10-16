@@ -1,77 +1,102 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import './ListaDeProdutosPraMostrarNaVenda.css';
-import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import EditarModal from "../EditarModal";
+import EditarModal from '../EditarModal';
 
-const pessoasData = [
-    {
-        id_produto: 2,
-        produto_nome: 'Mousepad',
-        quantidade_venda: 1,
-        valor_unitario: 1,
-    },
-    {
-        id_produto: 1,
-        produto_nome: 'Garrafa Stanley',
-        quantidade_venda: 2,
-        valor_unitario: 5,
-    },
-];
-
-const calculateSubTotal = (quantidade, valorUnitario) => quantidade * valorUnitario;
-
-const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => {
+const ListaDeProdutosPraVenda = ({
+ selectedProducts,
+ updateSelectedProducts,
+ onDeletar,
+ fields,
+ includeValorFields,
+ updateSubTotal,
+ updateSubTotalAndValorUnitario
+ }) => {
     const [showModal, setShowModal] = useState(false);
-    const [modalData, setModalData] = useState({});
     const [editedData, setEditedData] = useState({});
+    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [produtos, setProdutos] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/api/produtos')
+            .then((response) => response.json())
+            .then((data) => {
+                setProdutos(data.data);
+            });
+    }, []);
 
     const handleOpenModal = (id) => {
-        const dataToDisplay = pessoasData.find((p) => p.id_produto === id);
-        setModalData(dataToDisplay);
-        setEditedData(dataToDisplay);
-        setShowModal(true);
+        const productToEdit = selectedProducts.find((produto) => produto.id_venda === id);
+
+        if (productToEdit) {
+            setEditedData({ ...productToEdit });
+            setSelectedProductId(id);
+            setShowModal(true);
+        }
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
+        setSelectedProductId(null);
+        setEditedData({});
     };
 
-    const handleSaveChanges = async () => {
-        try {
-            const response = await fetch('your-api-endpoint', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(editedData),
-            });
+    const handleSaveChanges = () => {
+        const updatedProducts = [...selectedProducts];
 
-            if (response.ok) {
-                handleCloseModal();
-            } else {
-                console.error('Falha em fazer update dos dados');
-            }
-        } catch (error) {
-            console.error('Erro: ', error);
+        const productIndex = updatedProducts.findIndex((produto) => produto.id_venda === selectedProductId);
+
+        if (productIndex !== -1) {
+            updatedProducts[productIndex] = editedData;
+            updateSelectedProducts(updatedProducts);
+            handleCloseModal();
         }
     };
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setEditedData({
-            ...editedData,
-            [name]: value,
-        });
+    const calculateSubTotalForItem = (produto) => {
+        const quantidadeVenda = parseInt(produto.quantidadeVenda, 10) || 0;
+        const valorUnitario = parseFloat(produto.valorUnitario);
+        return quantidadeVenda * valorUnitario;
     };
 
+    const handleInputChange = (fieldName, value) => {
+        if (fieldName === 'produto') {
+            const selectedProduto = produtos.find((produto) => produto.nome_produto === value);
+
+            if (selectedProduto) {
+                setEditedData((prevData) => ({
+                    ...prevData,
+                    produto: selectedProduto.nome_produto,
+                }));
+
+                const quantidadeVenda = parseInt(editedData.quantidadeVenda, 10) || 0;
+                const valorUnitario = parseFloat(selectedProduto.valor_produto);
+
+                const subTotal = valorUnitario * quantidadeVenda;
+                updateSubTotal(subTotal);
+                updateSubTotalAndValorUnitario(subTotal, valorUnitario); // Call the callback here
+            }
+        } else {
+            setEditedData((prevData) => ({
+                ...prevData,
+                [fieldName]: value,
+            }));
+        }
+    };
+
+    useEffect(() => {
+        const newTotal = selectedProducts.reduce((total, produto) => {
+            return total + calculateSubTotalForItem(produto);
+        }, 0);
+
+        updateSubTotal(newTotal);
+    }, [selectedProducts]);
+
     const calculateTotal = () => {
-        return pessoasData.reduce((total, pessoa) => total +
-            calculateSubTotal(pessoa.quantidade_venda, pessoa.valor_unitario), 0);
+        return selectedProducts.reduce((total, produto) => total + parseFloat(produto.subTotal), 0);
     };
 
     return (
@@ -80,42 +105,29 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
                 <Table striped bordered hover className="table">
                     <thead>
                     <tr>
-                        <th>Código</th>
-                        <th>Nome</th>
-                        <th>Total Venda</th>
-                        <th>Quantidade</th>
-                        <th>Sub Total</th>
+                        {fields.map((field) => (
+                            <th key={field.name}>{field.label}</th>
+                        ))}
                         <th>Ações</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {pessoasData.map((pessoa) => (
-                        <tr key={pessoa.id_produto}>
-                            <td>{pessoa.id_produto}</td>
-                            <td>{pessoa.produto_nome}</td>
-                            <td>{pessoa.quantidade_venda}</td>
-                            <td>{pessoa.valor_unitario}</td>
-                            <td>{calculateSubTotal(pessoa.quantidade_venda, pessoa.valor_unitario)}</td>
+                    {selectedProducts.map((produto) => (
+                        <tr key={produto.id_venda}>
+                            {fields.map((field) => (
+                                <td key={field.name}>{produto[field.name]}</td>
+                            ))}
                             <td className="actions-column">
                                 <Button
                                     variant="warning"
-                                    onClick={() => handleOpenModal(pessoa.id_venda)}
+                                    onClick={() => handleOpenModal(produto.id_venda)}
                                     className="edit-button"
                                 >
-
                                     <FaEdit className="fa-edit" /> Editar
                                 </Button>
-                            {showModal && (
-                                <EditarModal
-                                    showModal={showModal}
-                                    handleCloseModal={handleCloseModal}
-                                    editedData={editedData}
-                                    handleSaveChanges={handleSaveChanges}
-                                    handleInputChange={handleInputChange}
-                                />)}
                                 <Button
                                     variant="danger"
-                                    onClick={() => onDeletar(pessoa.id_venda)}
+                                    onClick={() => onDeletar(produto.id_venda)}
                                     className="delete-button"
                                 >
                                     <FaTrash className="fa-trash" /> Deletar
@@ -128,8 +140,20 @@ const ListaDeProdutosPraVenda = ({ pessoa, onEditar, onDeletar, onIncluir }) => 
             </div>
             <div className="total-container">
                 <span className="total-label">Total:</span>
-                <span className="total-value">{calculateTotal()}</span>
+                <span className="total-value">{`R$ ${calculateTotal().toFixed(2)}`}</span>
             </div>
+            {showModal && (
+                <EditarModal
+                    showModal={showModal}
+                    handleCloseModal={handleCloseModal}
+                    editedData={editedData}
+                    handleSaveChanges={handleSaveChanges}
+                    handleInputChange={handleInputChange}
+                    fields={fields}
+                    produtos={produtos}
+                    includeValorFields={includeValorFields}
+                />
+            )}
         </div>
     );
 };

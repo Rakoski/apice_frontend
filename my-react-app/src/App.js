@@ -15,6 +15,11 @@ import CadastroProduto from "./Cadastros/CadastroProduto";
 import ListaDeProdutos from "./Listas/ListaProduto";
 import CadastroCidade from "./Cadastros/CadastroCidade";
 import ListaCidade from "./Listas/ListaCidade";
+import FiltroVendas from "./Listas/FiltroVendas";
+
+function Vendas() {
+    return null;
+}
 
 function App() {
     const [inputValue1, setInputValue1] = useState('Cadastro');
@@ -48,7 +53,7 @@ function App() {
                     />
 
                     <Dropdowns
-                        options={['Vendas']}
+                        options={['Vendas', 'Lista de vendas']}
                         listItemWidth={listItemWidth}
                         defaultValue={inputValue2}
                         inputValue={inputValue2}
@@ -56,7 +61,7 @@ function App() {
                     />
 
                     <Dropdowns
-                        options={['Filtro de pessoas', 'Lista de vendas']}
+                        options={['Filtro de pessoas', 'Filtro de Vendas']}
                         listItemWidth={listItemWidth}
                         defaultValue={inputValue3}
                         inputValue={inputValue3}
@@ -68,31 +73,14 @@ function App() {
                         <Route path="/cidades" element={<CadastroCidade />} />
                         <Route path="/pessoas" element={<CadastroPessoa />} />
                         <Route path="/produtos" element={<CadastroProduto />} />
-                        <Route path="/vendas" element={<Venda />} />
-                        <Route
-                            path="/lista de bairros"
-                            element={<ListaBairros />}
-                        />
-                        <Route
-                            path="/lista de cidades"
-                            element={<ListaCidade />}
-                        />
-                        <Route
-                            path="/filtro de pessoas"
-                            element={<FiltroPessoas />}
-                        />
-                        <Route
-                            path="/lista de pessoas"
-                            element={<ListaDePessoas />}
-                        />
-                        <Route
-                            path="/lista de produtos"
-                            element={<ListaDeProdutos />}
-                        />
-                        <Route
-                            path="/lista de vendas"
-                            element={<ListaVenda />}
-                        />
+                        <Route path="/vendas" element={<Venda />}/>
+                        <Route path="filtro de vendas" element={<FiltroVendas />}/>
+                        <Route path="/lista de bairros" element={<ListaBairros />}/>
+                        <Route path="/lista de cidades" element={<ListaCidade />}/>
+                        <Route path="/filtro de pessoas" element={<FiltroPessoas />}/>
+                        <Route path="/lista de pessoas" element={<ListaDePessoas />}/>
+                        <Route path="/lista de produtos" element={<ListaDeProdutos />}/>
+                        <Route path="/lista de vendas" element={<ListaVenda />}/>
                     </Routes>
                 </div>
             </div>
