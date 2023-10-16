@@ -3,10 +3,13 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import { FaSearch } from 'react-icons/fa';
 import './FiltroPessoas.css';
+import InputMask from "react-input-mask";
+import { format } from 'date-fns';
 
 const FiltroVendas = () => {
     const [vendasData, setVendasData] = useState([]);
     const [pessoasData, setPessoasData] = useState([]);
+    const [pessoaNames, setPessoaNames] = useState({});
     const [produtosData, setProdutosData] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const [filtroDataInicial, setFiltroDataInicial] = useState('');
@@ -40,6 +43,12 @@ const FiltroVendas = () => {
                 }
                 const pessoasData = await pessoasResponse.json();
                 setPessoasData(pessoasData);
+
+                const pessoaNamesMap = {};
+                pessoasData.forEach((pessoa) => {
+                    pessoaNamesMap[pessoa.id_pessoa] = pessoa.pessoa_nome;
+                });
+                setPessoaNames(pessoaNamesMap);
             } catch (error) {
                 console.error('Erro ao pegar os dados das pessoas:', error);
             }
@@ -66,83 +75,75 @@ const FiltroVendas = () => {
     }, []);
 
     const filterData = async () => {
-        let filtered = vendasData;
+        let filtered = [...vendasData];
 
         if (filtroDataInicial) {
-            const dataInicial = new Date(filtroDataInicial);
-            filtered = filtered.filter((venda) => new Date(venda.data_venda) >= dataInicial);
+            const [day, month, year] = filtroDataInicial.split('/').map(Number);
+            const dataInicial = new Date(year, month - 1, day);
+            if (isValidDate(dataInicial)) {
+                const isoDataInicial = dataInicial.toISOString().split('T')[0];
+                filtered = filtered.filter((venda) => venda.data_venda >= isoDataInicial);
+            }
         }
 
         if (filtroDataFinal) {
-            const dataFinal = new Date(filtroDataFinal);
-            filtered = filtered.filter((venda) => new Date(venda.data_venda) <= dataFinal);
+            const [day, month, year] = filtroDataFinal.split('/').map(Number);
+            const dataFinal = new Date(year, month - 1, day);
+            if (isValidDate(dataFinal)) {
+                dataFinal.setDate(dataFinal.getDate() + 1);
+                const isoDataFinal = dataFinal.toISOString().split('T')[0];
+                filtered = filtered.filter((venda) => venda.data_venda < isoDataFinal);
+            }
         }
 
         if (selectedPessoa) {
             filtered = filtered.filter((venda) => venda.pessoa_id === parseInt(selectedPessoa));
         }
 
-        if (selectedProduto) {
-            const vendaprodutoResponse =
-                await fetch(`http://localhost:8080/api/vendas_produtos/produto/${selectedProduto}`);
-            if (!vendaprodutoResponse.ok) {
-                console.error('Erro ao pegar os dados dos vendaprodutos');
-                return;
-            }
-            const vendaprodutoData = await vendaprodutoResponse.json();
+        const pessoaNamesMap = {};
+        pessoasData.forEach((pessoa) => {
+            pessoaNamesMap[pessoa.id_pessoa] = pessoa.pessoa_nome;
+        });
 
-            const filteredVendas = [];
-            for (const vendaproduto of vendaprodutoData.data) {
-                const vendaResponse = await fetch(`http://localhost:8080/api/vendas/${vendaproduto.venda_id}`);
-                if (!vendaResponse.ok) {
-                    console.error('Erro ao pegar os dados da venda');
-                    continue;
-                }
-                const vendaData = await vendaResponse.json();
-
-                console.log(vendaData.data.pessoa_id)
-
-                const pessoaResponse = await fetch(`http://localhost:8080/api/pessoas/${vendaData.data.pessoa_id}`);
-                if (!pessoaResponse.ok) {
-                    console.error('Erro ao pegar os dados da pessoa');
-                    continue;
-                }
-                const pessoaData = await pessoaResponse.json();
-
-                filteredVendas.push({
-                    venda_id: vendaData.data.id_venda,
-                    pessoa_nome: pessoaData.pessoa_nome,
-                    valor_venda: vendaData.data.valor_venda,
-                    data_venda: vendaData.data.data_venda,
-                });
-            }
-
-            filtered = filteredVendas;
-        }
+        filtered = filtered.map((venda) => ({
+            ...venda,
+            id_venda: venda.id_venda,
+            pessoa_nome: pessoaNamesMap[venda.pessoa_id],
+        }));
 
         setFilteredData(filtered);
     };
 
+    function isValidDate(date) {
+        return date instanceof Date && !isNaN(date);
+    }
+
     return (
         <div className="list-container">
             <div className="filter-container">
-                <input
-                    type="text"
-                    placeholder="Data Inicial"
-                    value={filtroDataInicial}
-                    onChange={(e) => setFiltroDataInicial(e.target.value)}
-                />
+                <div className="filter-container">
+                    <label className="venda-label">Data Venda:</label>
+                    <InputMask
+                        mask="99/99/9999"
+                        placeholder="DD/MM/YYYY"
+                        className="data-input"
+                        value={filtroDataInicial}
+                        onChange={(e) => setFiltroDataInicial(e.target.value)}
+                    />
+
                 <span style={{ margin: '0 5px' }}>à</span>
-                <input
-                    type="text"
-                    placeholder="Data Final"
-                    value={filtroDataFinal}
-                    onChange={(e) => setFiltroDataFinal(e.target.value)}
-                />
+                    <InputMask
+                        mask="99/99/9999"
+                        placeholder="DD/MM/YYYY"
+                        className="data-input"
+                        value={filtroDataFinal}
+                        onChange={(e) => setFiltroDataFinal(e.target.value)}
+                    />
+                </div>
 
                 <div className="dropdown">
                     <label className="dropdown-label">Pessoa:</label>
-                    <select
+                    <select className="dropdown-input"
                         value={selectedPessoa}
                         onChange={(e) => setSelectedPessoa(e.target.value)}
                     >
@@ -155,9 +156,10 @@ const FiltroVendas = () => {
                     </select>
                 </div>
 
+                <span style={{ margin: '0 5px' }}></span>
                 <div className="dropdown">
                     <label className="dropdown-label">Produto:</label>
-                    <select
+                    <select className="dropdown-input"
                         value={selectedProduto}
                         onChange={(e) => setSelectedProduto(e.target.value)}
                     >
@@ -187,18 +189,18 @@ const FiltroVendas = () => {
                         </thead>
                         <tbody>
                         {filteredData.map((venda) => (
-                            <tr key={venda.venda_id}>
-                                <td>{venda.venda_id}</td>
+                            <tr key={venda.id_venda}>
+                                <td>{venda.id_venda}</td>
                                 <td>{venda.pessoa_nome}</td>
                                 <td>{venda.valor_venda}</td>
-                                <td>{venda.data_venda}</td>
+                                <td>{format(new Date(venda.data_venda), 'dd/MM/yyyy')}</td>
                             </tr>
                         ))}
                         </tbody>
                     </Table>
                 </div>
             ) : (
-                <p>No results found.</p>
+                <p>Nada encontrado.</p>
             )}
         </div>
     );

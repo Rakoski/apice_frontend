@@ -199,6 +199,16 @@ function VendaComponent() {
         setSubTotal(0);
     };
 
+    function convertToISODate(dateString) {
+        const parts = dateString.split('/');
+        if (parts.length === 3) {
+            const [day, month, year] = parts;
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
+        return null;
+    }
+
+
     const sendVendaRequest = async () => {
         if (!selectedPessoaId) {
             alert('Por favor, selecione uma pessoa válida.');
@@ -212,8 +222,9 @@ function VendaComponent() {
 
         let total = parseFloat(calculateTotal().toFixed(2));
 
-        const dataVendaPraFormatar = new Date();
-        const dataVendaFormatada = dataVendaPraFormatar.toISOString().split('T')[0];
+        const dataVendaFormatada = convertToISODate(dataVenda)
+
+        console.log(dataVendaFormatada, dataVenda)
 
         const requestBody = {
             pessoa_id: selectedPessoaId,
@@ -246,7 +257,6 @@ function VendaComponent() {
                 if (response.status === 200) {
                     const responseData = await response.json();
                     const idDaVendaPraCadastrarNoProduto = responseData.data.id_venda;
-                    console.log(idDaVendaPraCadastrarNoProduto);
                     registerVendasProdutos(idDaVendaPraCadastrarNoProduto);
                 } else {
                     console.error('Error while fetching data from the API');

@@ -4,89 +4,112 @@ import Button from 'react-bootstrap/Button';
 import { FaSearch } from 'react-icons/fa';
 import './FiltroPessoas.css';
 
-const FiltroVendas = () => {
-    const [filtroDataInicial, setFiltroDataInicial] = useState('');
-    const [filtroDataFinal, setFiltroDataFinal] = useState('');
-    const [selectedPessoa, setSelectedPessoa] = useState('');
-    const [selectedProduto, setSelectedProduto] = useState('');
-    const [filteredData, setFilteredData] = useState([]);
+const FiltroPessoas = () => {
+    const [filtroNome, setFiltroNome] = useState('');
+    const [filtroCidade, setFiltroCidade] = useState('');
+    const [filtroBairro, setFiltroBairro] = useState('');
+    const [resultados, setResultados] = useState([]);
     const [filtrosAtivos, setFiltrosAtivos] = useState(false);
-    const [vendasData, setVendasData] = useState([]);
-    const [pessoaNomes, setPessoaNomes] = useState({});
-    const [produtoNomes, setProdutoNomes] = useState({});
+    const [pessoasData, setPessoasData] = useState([]);
+    const [cidadeNomes, setCidadeNomes] = useState({});
+    const [bairroNomes, setBairroNomes] = useState({});
 
-    // Function to fetch pessoa name by ID
-    async function fetchPessoaNome(id_pessoa) {
+    async function fetchCidadeNome(id_cidade) {
         try {
-            const response = await fetch(`http://localhost:8080/api/pessoas/${id_pessoa}`);
+            const response = await fetch(`http://localhost:8080/api/cidades/${id_cidade}`);
             if (response.ok) {
                 const data = await response.json();
-                setPessoaNomes((prevPessoaNomes) => ({
-                    ...prevPessoaNomes,
-                    [id_pessoa]: data.data.pessoa_nome,
+                setCidadeNomes((prevCidadeNomes) => ({
+                    ...prevCidadeNomes,
+                    [id_cidade]: data.data.cidade_nome,
                 }));
-                return data.data.pessoa_nome;
+                return data.data.cidade_nome;
             } else {
-                console.error('Erro ao pegar pessoa_nome');
+                console.error('Erro ao pegar cidade_nome');
                 return null;
             }
         } catch (error) {
-            console.error('Erro ao pegar pessoa_nome:', error);
+            console.error('Erro ao pegar cidade_nome:', error);
             return null;
         }
     }
 
-    // Function to fetch produto name by ID
-    async function fetchProdutoNome(id_produto) {
+    async function fetchBairroNome(id_bairro) {
         try {
-            const response = await fetch(`http://localhost:8080/api/produtos/${id_produto}`);
+            const response = await fetch(`http://localhost:8080/api/bairros/${id_bairro}`);
             if (response.ok) {
                 const data = await response.json();
-                setProdutoNomes((prevProdutoNomes) => ({
-                    ...prevProdutoNomes,
-                    [id_produto]: data.data.nome_produto,
+                setBairroNomes((prevBairroNomes) => ({
+                    ...prevBairroNomes,
+                    [id_bairro]: data.data.bairro_nome,
                 }));
-                return data.data.nome_produto;
+                return data.data.bairro_nome;
             } else {
-                console.error('Erro ao pegar nome_produto');
+                console.error('Erro ao pegar bairro_nome');
                 return null;
             }
         } catch (error) {
-            console.error('Erro ao pegar nome_produto:', error);
+            console.error('Erro ao pegar bairro_nome:', error);
             return null;
         }
     }
+
+    const fetchBairroData = async (bairroNome) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/bairros/nome/${bairroNome}`);
+            if (!response.ok) {
+                console.error('Erro ao pegar o id do bairro');
+            }
+            const bairrosData = await response.json();
+            return bairrosData.data.id_bairro;
+        } catch (error) {
+            console.error('Erro ao pegar os dados do bairro: ', error);
+            return null;
+        }
+    };
+
+    const fetchCidadeData = async (cidadeNome) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/cidades/nome/${cidadeNome}`);
+            if (!response.ok) {
+                console.error('Erro ao pegar o id da cidade');
+            }
+            const cidadesData = await response.json();
+            return cidadesData.data.id_cidade;
+        } catch (error) {
+            console.error('Erro ao pegar os dados da cidade: ', error);
+            return null;
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const vendasResponse = await fetch('http://localhost:8080/api/vendas');
-                if (!vendasResponse.ok) {
+                const pessoasResponse = await fetch('http://localhost:8080/api/pessoas');
+                if (!pessoasResponse.ok) {
                     console.error('Falha em pegar os dados');
                 }
-                const vendasData = await vendasResponse.json();
-                setVendasData(vendasData);
+                const pessoasData = await pessoasResponse.json();
+                setPessoasData(pessoasData);
 
-                const promises = vendasData.map(async (venda) => {
-                    const idPessoa = venda.pessoa_id;
-                    const idProduto = venda.produto_id;
+                const promises = pessoasData.map(async (pessoa) => {
+                    const idPessoa = pessoa.id_pessoa;
+                    try {
+                        const eachPersonResponse = await fetch(`http://localhost:8080/api/pessoas/${idPessoa}`);
+                        if (eachPersonResponse.ok) {
+                            const eachPersonData = await eachPersonResponse.json();
 
-                    // Fetch and set pessoaNomes
-                    if (!pessoaNomes[idPessoa]) {
-                        const pessoaNome = await fetchPessoaNome(idPessoa);
-                        setPessoaNomes((prevPessoaNomes) => ({
-                            ...prevPessoaNomes,
-                            [idPessoa]: pessoaNome,
-                        }));
-                    }
+                            const idBairro = eachPersonData.bairro_id
+                            const idCidade = eachPersonData.cidade_id
 
-                    // Fetch and set produtoNomes
-                    if (!produtoNomes[idProduto]) {
-                        const produtoNome = await fetchProdutoNome(idProduto);
-                        setProdutoNomes((prevProdutoNomes) => ({
-                            ...prevProdutoNomes,
-                            [idProduto]: produtoNome,
-                        }));
+                            const cidadeNome = await fetchCidadeNome(idCidade);
+                            const bairroNome = await fetchBairroNome(idBairro);
+
+                        } else {
+                            console.error('Erro em pegar os dados de cada usuário');
+                        }
+                    } catch (error) {
+                        console.error('Erro em pegar os dados de cada usuário', error);
                     }
                 });
 
@@ -99,100 +122,82 @@ const FiltroVendas = () => {
         fetchData();
     }, []);
 
-    const filterData = () => {
-        const filteredVendas = vendasData.filter((venda) => {
-            const dataInicialMatch = filtroDataInicial.trim() === '' || new Date(venda.data_venda) >= new Date(filtroDataInicial);
-            const dataFinalMatch = filtroDataFinal.trim() === '' || new Date(venda.data_venda) <= new Date(filtroDataFinal);
-            const pessoaMatch = selectedPessoa.trim() === '' || venda.pessoa_id === parseInt(selectedPessoa);
-            const produtoMatch = selectedProduto.trim() === '' || venda.produto_id === parseInt(selectedProduto);
-
-            return dataInicialMatch && dataFinalMatch && pessoaMatch && produtoMatch;
-        });
-
-        setFilteredData(filteredVendas);
-    };
 
     useEffect(() => {
         const filtroAtivo =
-            filtroDataInicial.trim() !== '' ||
-            filtroDataFinal.trim() !== '' ||
-            selectedPessoa.trim() !== '' ||
-            selectedProduto.trim() !== '';
+            filtroNome.trim() !== '' ||
+            filtroCidade.trim() !== '' ||
+            filtroBairro.trim() !== '';
 
         setFiltrosAtivos(filtroAtivo);
+
+        const filterData = async () => {
+            let filteredPessoas = pessoasData;
+
+            if (filtroBairro.trim() !== '') {
+                const bairroId = await fetchBairroData(filtroBairro);
+                filteredPessoas = filteredPessoas.filter((pessoa) => pessoa.bairro_id === bairroId);
+            }
+
+            if (filtroCidade.trim() !== '') {
+                const cidadeId = await fetchCidadeData(filtroCidade);
+                filteredPessoas = filteredPessoas.filter((pessoa) => pessoa.cidade_id === cidadeId);
+            }
+
+            if (filtroNome.trim() !== '') {
+                filteredPessoas = filteredPessoas.filter((pessoa) =>
+                    pessoa.pessoa_nome.toLowerCase().includes(filtroNome.toLowerCase())
+                );
+            }
+
+            setResultados(filteredPessoas);
+        };
         filterData();
-    }, [filtroDataInicial, filtroDataFinal, selectedPessoa, selectedProduto]);
+    }, [filtroNome, filtroCidade, filtroBairro, pessoasData]);
 
     return (
         <div className="list-container">
             <div className="filter-container">
                 <input
                     type="text"
-                    placeholder="Data Inicial"
-                    value={filtroDataInicial}
-                    onChange={(e) => setFiltroDataInicial(e.target.value)}
+                    placeholder="Nome"
+                    value={filtroNome}
+                    onChange={(e) => setFiltroNome(e.target.value)}
                 />
-                <span style={{ margin: '0 5px' }}>à</span>
                 <input
                     type="text"
-                    placeholder="Data Final"
-                    value={filtroDataFinal}
-                    onChange={(e) => setFiltroDataFinal(e.target.value)}
+                    placeholder="Cidade"
+                    value={filtroCidade}
+                    onChange={(e) => setFiltroCidade(e.target.value)}
                 />
-
-                <div className="dropdown">
-                    <label className="dropdown-label">Pessoa:</label>
-                    <select
-                        value={selectedPessoa}
-                        onChange={(e) => setSelectedPessoa(e.target.value)}
-                    >
-                        <option value="">Todas</option>
-                        {vendasData.map((venda) => (
-                            <option key={venda.pessoa_id} value={venda.pessoa_id}>
-                                {pessoaNomes[venda.pessoa_id] || 'Carregando...'}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="dropdown">
-                    <label className="dropdown-label">Produto:</label>
-                    <select
-                        value={selectedProduto}
-                        onChange={(e) => setSelectedProduto(e.target.value)}
-                    >
-                        <option value="">Todos</option>
-                        {vendasData.map((venda) => (
-                            <option key={venda.produto_id} value={venda.produto_id}>
-                                {produtoNomes[venda.produto_id] || 'Carregando...'}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <Button onClick={filterData}>
+                <input
+                    type="text"
+                    placeholder="Bairro"
+                    value={filtroBairro}
+                    onChange={(e) => setFiltroBairro(e.target.value)}
+                />
+                <Button>
                     <FaSearch /> Filtrar
                 </Button>
             </div>
-            {filtrosAtivos && filteredData.length > 0 ? (
+            {filtrosAtivos && resultados.length > 0 ? (
                 <div className="table-container">
                     <Table striped bordered hover className="table">
                         <thead>
                         <tr>
                             <th>Código</th>
-                            <th>Pessoa</th>
-                            <th>Produto</th>
-                            <th>Valor Venda</th>
-                            <th>Data Venda</th>
+                            <th>Nome</th>
+                            <th>Cidade</th>
+                            <th>Telefone</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {filteredData.map((venda) => (
-                            <tr key={venda.id_venda}>
-                                <td>{venda.id_venda}</td>
-                                <td>{pessoaNomes[venda.pessoa_id] || 'Carregando...'}</td>
-                                <td>{produtoNomes[venda.produto_id] || 'Carregando...'}</td>
-                                <td>{venda.valor_venda}</td>
-                                <td>{venda.data_venda}</td>
+                        {resultados.map((pessoa) => (
+                            <tr key={pessoa.id_pessoa}>
+                                <td>{pessoa.id_pessoa}</td>
+                                <td>{pessoa.pessoa_nome}</td>
+                                <td>{cidadeNomes[pessoa.cidade_id]}</td>
+                                <td>{pessoa.telefone}</td>
                             </tr>
                         ))}
                         </tbody>
@@ -203,4 +208,4 @@ const FiltroVendas = () => {
     );
 };
 
-export default FiltroVendas;
+export default FiltroPessoas;

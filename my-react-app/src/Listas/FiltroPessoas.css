@@ -11,12 +11,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .filter-container input {
-    margin: 0 10px;
-    padding: 10px;
+    margin-top: 20px;
+    margin-right: 10px;
+    padding:  10px 20px;
     border: 1px solid #ccc;
     border-radius: 3px;
 }
@@ -46,6 +47,32 @@
     text-align: center;
 }
 
+.data-input {
+    width: 100%;
+    padding: 05px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* dropdowns */
+.dropdown-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+.dropdown-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 5px;
+}
+
+/* campos de input sem ser dropdowns */
 .table th {
     background-color: #808080; /* cinza */
     color: white;
