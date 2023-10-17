@@ -44,6 +44,28 @@ O projeto oferece as seguintes funcionalidades:
 - Geração de relatórios com base nos dados cadastrados.
 - Navegação intuitiva por meio de dropdowns na interface.
 
+## Interfaces:
+
+### página principal:
+
+![image](https://github.com/Rakoski/apice_frontend/assets/126481665/04600ef9-cdb2-43e1-b317-040ebe0e1e1d)
+
+### Cadastros: 
+
+- Cadastro de produtos: 
+![image](https://github.com/Rakoski/apice_frontend/assets/126481665/e20fedf2-6408-43c0-9798-85758c5786a5)
+
+- Cadastro de bairros:
+![image](https://github.com/Rakoski/apice_frontend/assets/126481665/fb4c2afb-332c-44f1-98b6-7ff4f94f7b75)
+
+- Cadastro de pessoas:
+![image](https://github.com/Rakoski/apice_frontend/assets/126481665/94b25390-4056-4a01-a15d-bc05da2679f6)
+
+- Cadastro de produtos:
+![image](https://github.com/Rakoski/apice_frontend/assets/126481665/012463b3-8335-480a-a93b-e3a712623d1d)
+
+
+
 ## Contribuição
 
 Este projeto foi desenvolvido com o objetivo de demonstrar habilidades e conhecimentos relevantes para um estágio na Ápice Sistemas. Se você deseja contribuir ou tem alguma dúvida específica sobre o projeto, sinta-se à vontade para entrar em contato.
